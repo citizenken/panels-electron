@@ -28,6 +28,7 @@ module.exports = function(config) {
       'app/bower_components/angular-route/angular-route.js',
       'app/bower_components/codemirror/lib/codemirror.js',
       'app/bower_components/angular-ui-codemirror/ui-codemirror.js',
+      'app/bower_components/angular-elastic-input/dist/angular-elastic-input.min.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

@@ -81,15 +81,3 @@ body {
     border-bottom: 0;
   }
 }
-
-body {
-  background-color: lightblue;
-}
-
-.navbar {
-  border-radius: 0px;
-}
-
-.CodeMirror {
-  height: 100%;
-}

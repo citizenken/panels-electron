@@ -1,0 +1,16 @@
+.CodeMirror {
+  height: 100%;
+}
+
+.title-input {
+  box-shadow: none;
+  background-color: inherit;
+  border-style: none;
+  border-radius: 0;
+  border-bottom: medium solid #ff0000;
+  font-size:18px;
+}
+
+.title-input::-webkit-input-placeholder {
+  font-style: italic;
+}

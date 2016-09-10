@@ -13,7 +13,8 @@ angular
     'ngAnimate',
     'ngResource',
     'ngRoute',
-    'ui.codemirror'
+    'ui.codemirror',
+    'puElasticInput'
   ])
   .config(function ($routeProvider) {
     $routeProvider
