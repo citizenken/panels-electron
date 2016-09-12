@@ -29,6 +29,12 @@ module.exports = function(config) {
       'app/bower_components/codemirror/lib/codemirror.js',
       'app/bower_components/angular-ui-codemirror/ui-codemirror.js',
       'app/bower_components/angular-elastic-input/dist/angular-elastic-input.min.js',
+      'app/bower_components/snapjs/snap.js',
+      'app/bower_components/angular-snap/angular-snap.js',
+      'app/bower_components/ng-lodash/build/ng-lodash.js',
+      'app/bower_components/lodash/lodash.js',
+      'app/bower_components/panels-lib/dist/panels-lib.js',
+      'app/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

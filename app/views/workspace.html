@@ -1,21 +1,42 @@
-<nav class="navbar navbar-default">
-  <div id="navbar" class="collapse navbar-collapse">
-    <form class="navbar-form navbar-left" role="search">
-      <div class="form-group">
-          <input type="text" class="form-control title-input" placeholder="Untitled {{ workspace.file.type }}"
-          pu-elastic-input pu-elastic-input-minwidth="200px" pu-elastic-input-maxwidth="1000px">
+<snap-drawer>
+  <p>I'm a drawer! I maybe I've got some sweet navigation links.</p>
+</snap-drawer>
+
+<snap-content class="hide-snap-overflow">
+  <nav class="navbar navbar-default">
+    <div id="navbar" class="collapse navbar-collapse">
+      <button snap-toggle="left" class="btn btn-default navbar-btn menu-btn" aria-label="Menu">
+        <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
+      </button>
+      <form class="navbar-form navbar-left" role="search">
+        <div class="form-group">
+            <input type="text" class="form-control title-input" placeholder="Untitled {{ workspace.file.type }}"
+            pu-elastic-input pu-elastic-input-minwidth="200px" pu-elastic-input-maxwidth="1000px" ng-model="workspace.workingFile.title">
+        </div>
+      </form>
+    </div><!--/.nav-collapse -->
+  </nav>
+  <button ng-click="workspace.createFile()">click</button>
+  <span ng-if="workspace.saved">Saved!</span>
+  <div id="page-wrapper" class="row" ng-click="workspace.focusPage()">
+    <div class="col-md-10 col-md-offset-custom">
+      <div class="page col-md-11">
+        <div ui-codemirror="{ onLoad : workspace.codemirrorLoaded }" ui-codemirror-opts="workspace.editorOptions" ng-model="workspace.workingFile.content" ui-refresh="true" ng-show="workspace.tab == 'edit'" ></div>
+        <panels-preview ng-show="workspace.tab == 'preview'" script-type="{{ workspace.file.type }}"></panels-preview>
       </div>
-      <!-- <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button> -->
-    </form>
-  </div><!--/.nav-collapse -->
-</nav>
-<div id="page-wrapper" ng-click="workspace.focusPage()">
-  <div class="page">
-    <div ui-codemirror="{ onLoad : workspace.codemirrorLoaded }" ui-codemirror-opts="workspace.editorOptions" ng-model="workspace.file.content" ui-refresh="true" ></div>
+      <div class="col-md-1 page-adjacent">
+        <ul class="nav nav-tabs tabs-right">
+          <li class="active"><a data-toggle="tab" ng-click="workspace.changeTab('edit')">Home</a></li>
+          <li><a data-toggle="tab" ng-click="workspace.changeTab('preview')">Profile</a></li>
+          <li><a data-toggle="tab">Messages</a></li>
+          <li><a data-toggle="tab">Settings</a></li>
+        </ul>
+      </div>
+    </div>
   </div>
-</div>
-<footer class="footer">
-  <div class="container">
-    <p class="text-muted">Questions? Comments? Improvements? Contact <a href="https://github.com/citizenken" target="_blank">Ken Petti</a> on Slack or <a href="mailto:ken.petti@cloudlock.com?Subject=Kraken">by email</a></p>
-  </div>
-</footer>
+  <!-- <footer class="footer">
+    <div class="container">
+      <p class="text-muted">Questions? Comments? Improvements? Contact <a href="https://github.com/citizenken" target="_blank">Ken Petti</a> on Slack or <a href="mailto:ken.petti@cloudlock.com?Subject=Kraken">by email</a></p>
+    </div>
+  </footer> -->
+</snap-content>

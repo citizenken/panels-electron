@@ -14,3 +14,32 @@
 .title-input::-webkit-input-placeholder {
   font-style: italic;
 }
+
+.menu-btn {
+  float: left;
+}
+
+.page-adjacent {
+  padding-left: 0px;
+  margin-top: 1cm;
+}
+
+.page-sidebar {
+  padding-right: 0px;
+}
+
+.page-sidebar .page {
+  margin-right: 0px;
+}
+
+.col-md-offset-custom {
+  margin-left: 12.333333%
+}
+
+.col-md-custom {
+  margin-left: 81%
+}
+
+.hide-snap-overflow {
+  overflow-x: hidden;
+}

@@ -2,22 +2,21 @@
 
 /**
  * @ngdoc service
- * @name panels.localfile
+ * @name panels.localFile
  * @description
- * # localfile
+ * # fileService
  * Factory in the panels.
  */
 angular.module('panels')
-  .factory('localfile', function () {
-    // Service logic
-    // ...
-
-    var meaningOfLife = 42;
-
-    // Public API here
-    return {
-      someMethod: function () {
-        return meaningOfLife;
-      }
+  .factory('LocalFile', ['File', function (File) {
+    var filePrefix = 'panelsFile_';
+    var save = function () {
+      console.log('pre-save this', this);
+      return localStorage.setItem(filePrefix + this.id, JSON.stringify(this));
     };
-  });
+
+    return function LocalFile (scriptType) {
+      File.call(this, scriptType);
+      this.save = save;
+    };
+  }]);
