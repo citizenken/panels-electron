@@ -15,12 +15,13 @@ angular.module('panels')
         lineWrapping : true,
         lineNumbers: false,
         mode: 'comicbook',
-        extraKeys: {"Ctrl-Space": "autocomplete"}
+        extraKeys: {'Ctrl-Space': 'autocomplete'}
     };
     ctrl.workingFile = {
       type: 'comic',
       content: null
     };
+    ctrl.scriptType = 'comicbook';
     ctrl.init = init;
     ctrl.createFile = createFile;
     ctrl.focusPage = focusPage;
@@ -31,6 +32,11 @@ angular.module('panels')
     ctrl.tab = 'edit';
 
     function init () {
+      if (!fileService.currentFile) {
+        fileService.create(ctrl.scriptType);
+        fileService.setCurrentFile();
+        scriptService.createScript();
+      }
       ctrl.workingFile = fileService.currentFile;
       scriptService.parseCurrentFile();
     }

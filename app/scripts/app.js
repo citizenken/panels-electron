@@ -22,7 +22,9 @@ angular
   .run(['fileService', 'scriptService', function (fileService, scriptService) {
     fileService.loadFiles();
     fileService.setCurrentFile();
-    scriptService.createScript();
+    if (fileService.currentFile) {
+        scriptService.createScript();
+    }
     window.CodeMirror.registerHelper('hint', 'script', function(cm) {
       var cursorHead = cm.getCursor(),
           lastCursor = angular.copy(cursorHead),

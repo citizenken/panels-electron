@@ -41,7 +41,6 @@ angular.module('panels')
         if (!angular.equals({}, this.files)) {
           var lastModified = lodash.orderBy(lodash.toArray(this.files), 'modifiedOn', 'desc')[0];
           this.currentFile = lastModified;
-          console.log(lastModified.id);
         }
       }
     };

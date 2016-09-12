@@ -17,8 +17,8 @@ angular.module('panels')
       },
 
       parseCurrentFile: function () {
-        var content = fileService.currentFile.content;
-        if (typeof(content) !== 'undefined' && content !== null) {
+        if (typeof(fileService.currentFile.content) !== 'undefined' && 
+        fileService.currentFile.content !== null) {
           this.createScript();
           this.script.fromBlob(fileService.currentFile.content);
           $rootScope.$emit('renderScript');

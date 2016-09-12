@@ -11,7 +11,6 @@ angular.module('panels')
   .factory('LocalFile', ['File', function (File) {
     var filePrefix = 'panelsFile_';
     var save = function () {
-      console.log('pre-save this', this);
       return localStorage.setItem(filePrefix + this.id, JSON.stringify(this));
     };
 

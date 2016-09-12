@@ -1,7 +1,7 @@
+// jscs:disable
 /* Example definition of a simple mode that understands a subset of
  * JavaScript:
  */
-
 window.CodeMirror.defineSimpleMode("comicbook", {
   // The start state contains the rules that are intially used
   start: [
