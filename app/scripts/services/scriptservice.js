@@ -17,7 +17,7 @@ angular.module('panels')
       },
 
       parseCurrentFile: function () {
-        if (typeof(fileService.currentFile.content) !== 'undefined' && 
+        if (typeof(fileService.currentFile.content) !== 'undefined' &&
         fileService.currentFile.content !== null) {
           this.createScript();
           this.script.fromBlob(fileService.currentFile.content);
@@ -59,6 +59,7 @@ angular.module('panels')
         // suggest character w/incremented dialogue
         if (hints.length === 0 &&
           query === '' &&
+          lastElement &&
           lastElement.text.match(/[0-9]/) &&
           lastElement.type === 'character') {
           return this.suggestNextCharIncrement(filtered, lastElement);
@@ -67,18 +68,20 @@ angular.module('panels')
         // suggets next character, no starting number, empty query
         if (hints.length === 0 &&
           query === '' &&
+          lastElement &&
           lastElement.type === 'character' &&
           filtered[filtered.length - 2].type === 'character') {
           return this.suggestNextCharInConvo(filtered, 2);
         }
 
         // suggets next character, no starting number, starting query
-        if (hints.length === 0 &&
-          query !== '' &&
-          filtered[filtered.length - 2].type === 'character' &&
-          filtered[filtered.length - 3].type === 'character') {
-          return this.suggestNextCharInConvo(filtered, 3);
-        }
+        // if (hints.length === 0 &&
+        //   query !== '' &&
+        //   filtered &&
+        //   filtered[filtered.length - 2].type === 'character' &&
+        //   filtered[filtered.length - 3].type === 'character') {
+        //   return this.suggestNextCharInConvo(filtered, 3);
+        // }
 
         return hints;
 

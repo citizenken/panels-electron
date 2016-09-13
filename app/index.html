@@ -61,13 +61,14 @@
 
   <script src="bower_components/codemirror/mode/javascript/javascript.js"></script>
   <script src="bower_components/codemirror/addon/mode/simple.js"></script>
-  <script src="bower_components/codemirror/addon/hint/show-hint.js"></script>
 
 
   <!-- build:js({.tmp,app}) scripts/scripts.js -->
   <!-- include: "type": "js", "files": "scripts/**/*.js" -->
   <script src="scripts/app.js"></script>
   <script src="scripts/controllers/workspace.js"></script>
+  <script src="scripts/customCodemirror/scriptMode.js"></script>
+  <script src="scripts/customCodemirror/show-hint.js"></script>
   <script src="scripts/directives/panelspreview.js"></script>
   <script src="scripts/services/file.js"></script>
   <script src="scripts/services/fileservice.js"></script>
@@ -77,7 +78,6 @@
   <script src="scripts/services/remotefile.js"></script>
   <script src="scripts/services/scriptservice.js"></script>
   <script src="scripts/services/utilityservice.js"></script>
-  <script src="scripts/utility/scriptMode.js"></script>
   <!-- /include -->
 
   <script src="scripts/services/scriptservice.js"></script>

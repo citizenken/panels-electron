@@ -43,3 +43,11 @@
 .hide-snap-overflow {
   overflow-x: hidden;
 }
+
+#page-wrapper {
+  background-color: #eee;
+}
+
+snap-content {
+  background-color: #eee;
+}
