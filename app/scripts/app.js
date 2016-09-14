@@ -19,6 +19,9 @@ angular
     'ngLodash',
     'ui.bootstrap'
   ])
+  .config(['snapRemoteProvider', function (snapRemoteProvider) {
+    snapRemoteProvider.globalOptions.touchToDrag = false;
+  }])
   .run(['fileService', 'scriptService', function (fileService, scriptService) {
     fileService.loadFiles();
     fileService.setCurrentFile();

@@ -12,13 +12,18 @@ var win = void 0;
 
 function createWindow() {
   // Create the browser window.
-  win = new BrowserWindow({ width: 800, height: 600 });
+  // win = new BrowserWindow({ width: 800, height: 600});
+  var win = new BrowserWindow({ show: false });
+  win.once('ready-to-show', function () {
+    win.maximize();
+    win.show();
+  });
 
   // and load the index.html of the app.
   win.loadURL('file://' + __dirname + '/index.html');
 
   // Open the DevTools.
-  win.webContents.openDevTools();
+  // win.webContents.openDevTools();
 
   // Emitted when the window is closed.
   win.on('closed', function () {
