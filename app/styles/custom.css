@@ -48,6 +48,14 @@
   background-color: #eee;
 }
 
-snap-content {
-  background-color: #eee;
+.no-bottom-margin {
+  margin-bottom: 0px;
+}
+
+.top-padding {
+  padding-top: 20px;
+}
+
+.block {
+  display: block;
 }

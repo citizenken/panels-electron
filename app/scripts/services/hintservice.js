@@ -2,31 +2,17 @@
 
 /**
  * @ngdoc service
- * @name panelsElectronApp.scriptservice
+ * @name panelsElectronApp.scriptService
  * @description
- * # scriptservice
+ * # scriptService
  * Factory in the panelsElectronApp.
  */
 angular.module('panels')
-  .factory('scriptService', ['$rootScope', 'fileService', 'lodash',
-    function ($rootScope, fileService, lodash) {
+  .factory('hintService', ['$rootScope', 'fileService', 'lodash', 'scriptService',
+    function ($rootScope, fileService, lodash, scriptService) {
     return {
-      script: null,
-      createScript: function () {
-        this.script = new window.Script(fileService.currentFile.type);
-      },
-
-      parseCurrentFile: function () {
-        if (typeof(fileService.currentFile.content) !== 'undefined' &&
-        fileService.currentFile.content !== null) {
-          this.createScript();
-          this.script.fromBlob(fileService.currentFile.content);
-          $rootScope.$emit('renderScript');
-        }
-      },
-
       generateElementHint: function (query) {
-        var filtered = lodash.filter(this.script.elements, ['isSubElement', false]),
+        var filtered = lodash.filter(scriptService.script.elements, ['isSubElement', false]),
             characterHints = this.characterHints(query, filtered),
             templateHints = this.templateHints(query, filtered),
             simpleHints = this.simpleHint(query, filtered),
@@ -53,7 +39,7 @@ angular.module('panels')
       templateHints: function () {
         var hints = [];
 
-        angular.forEach(lodash.filter(this.script.config.elements, 'template'), function (value) {
+        angular.forEach(lodash.filter(scriptService.script.config.elements, 'template'), function (value) {
           hints.push(value.template);
         });
         return hints;

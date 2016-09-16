@@ -28,6 +28,8 @@ angular
     if (fileService.currentFile) {
         scriptService.createScript();
     }
+  }])
+  .run(['hintService', function (hintService) {
     window.CodeMirror.registerHelper('hint', 'script', function(cm) {
       var cursorHead = cm.getCursor(),
           lastCursor = angular.copy(cursorHead),
@@ -36,14 +38,15 @@ angular
       lastCursor.ch = 0;
       var query = cm.getRange(lastCursor, cursorHead);
 
-      hintList = scriptService.generateElementHint(query);
+      hintList = hintService.generateElementHint(query);
       hints = {from: cm.getCursor(), to: cm.getCursor(), list: hintList};
       return hints;
     });
 
-    window.CodeMirror.commands.autocomplete = function(cm) {
+    window.CodeMirror.commands.showHints = function(cm) {
       cm.showHint({hint: window.CodeMirror.hint.script});
     };
+
   }])
   .config(function ($routeProvider) {
     $routeProvider

@@ -3,7 +3,7 @@
 </snap-drawer>
 
 <snap-content class="hide-snap-overflow">
-  <nav class="navbar navbar-default">
+  <nav class="navbar navbar-default no-bottom-margin">
     <div id="navbar" class="collapse navbar-collapse">
       <button snap-toggle="left" class="btn btn-default navbar-btn menu-btn" aria-label="Menu">
         <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
@@ -14,11 +14,10 @@
             pu-elastic-input pu-elastic-input-minwidth="200px" pu-elastic-input-maxwidth="1000px" ng-model="workspace.workingFile.title">
         </div>
       </form>
+      <p class="navbar-text"><i ng-show="workspace.saved" class="block glyphicon glyphicon-floppy-saved"></i></p>
     </div><!--/.nav-collapse -->
   </nav>
-  <button ng-click="workspace.createFile()">click</button>
-  <span ng-if="workspace.saved">Saved!</span>
-  <div id="page-wrapper" class="row" ng-click="workspace.focusPage()">
+  <div id="page-wrapper" class="row top-padding" ng-click="workspace.focusPage()">
     <div class="col-md-11 col-md-offset-custom">
       <div class="page col-md-11">
         <div ui-codemirror="{ onLoad : workspace.codemirrorLoaded }" ui-codemirror-opts="workspace.editorOptions" ng-model="workspace.workingFile.content" ui-refresh="true" ng-show="workspace.tab == 'edit'" ></div>

@@ -15,7 +15,7 @@ angular.module('panels')
         lineWrapping : true,
         lineNumbers: false,
         mode: 'comicbook',
-        extraKeys: {'Ctrl-Space': 'autocomplete'}
+        extraKeys: {'Ctrl-Space': 'showHints'}
     };
     ctrl.workingFile = {
       type: 'comic',
@@ -30,6 +30,7 @@ angular.module('panels')
     ctrl.saved = false;
     ctrl.changeTab = changeTab;
     ctrl.tab = 'edit';
+    ctrl.showNavbar = false;
 
     function init () {
       if (!fileService.currentFile) {
