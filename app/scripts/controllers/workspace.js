@@ -8,8 +8,8 @@
  * Controller of the panels
  */
 angular.module('panels')
-  .controller('WorkspaceCtrl', ['$scope', '$rootScope', '$timeout', 'fileService', 'scriptService',
-    function ($scope, $rootScope, $timeout, fileService, scriptService) {
+  .controller('WorkspaceCtrl', ['$scope', '$rootScope', '$timeout', 'fileService', 'scriptService', 'firebaseService',
+    function ($scope, $rootScope, $timeout, fileService, scriptService, firebaseService) {
     var ctrl = this;
     ctrl.editorOptions = {
         lineWrapping : true,
@@ -31,6 +31,8 @@ angular.module('panels')
     ctrl.changeTab = changeTab;
     ctrl.tab = 'edit';
     ctrl.showNavbar = false;
+    ctrl.signIn = signIn;
+    ctrl.syncFile = syncFile;
 
     function init () {
       if (!fileService.currentFile) {
@@ -42,10 +44,18 @@ angular.module('panels')
       scriptService.parseCurrentFile();
     }
 
-    function createFile () {
-      // fileService.create('comicbook');
-      scriptService.generateElementHint();
+    function signIn () {
+      firebaseService.signIn();
+    }
 
+    function syncFile () {
+      fileService.syncFile();
+    }
+
+    function createFile () {
+      fileService.create('comicbook');
+      fileService.setCurrentFile();
+      // scriptService.generateElementHint();
     }
 
     function codemirrorLoaded (editor) {

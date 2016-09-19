@@ -35,6 +35,8 @@ module.exports = function(config) {
       'app/bower_components/lodash/lodash.js',
       'app/bower_components/panels-lib/dist/panels-lib.js',
       'app/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
+      'app/bower_components/firebase/firebase.js',
+      'app/bower_components/angularfire/dist/angularfire.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

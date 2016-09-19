@@ -35,6 +35,11 @@ angular.module('panels')
             this.history.pop();
           }
           delete oldVersion.history;
+          angular.forEach(angular.copy(oldVersion), function (value, key) {
+            if (typeof value === 'function') {
+              delete oldVersion[key];
+            }
+          });
           this.history.unshift(oldVersion);
         }
       };

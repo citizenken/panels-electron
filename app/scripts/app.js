@@ -17,9 +17,17 @@ angular
     'puElasticInput',
     'snap',
     'ngLodash',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'firebase'
   ])
   .config(['snapRemoteProvider', function (snapRemoteProvider) {
+    var config = {
+      apiKey: 'AIzaSyBFM-2jOMfbeB0gOw_Xi2WQkhBg8GTqsIQ',
+      authDomain: 'panels-fd87e.firebaseapp.com',
+      databaseURL: 'https://panels-fd87e.firebaseio.com',
+      storageBucket: 'panels-fd87e.appspot.com',
+    };
+    window.firebase.initializeApp(config);
     snapRemoteProvider.globalOptions.touchToDrag = false;
   }])
   .run(['fileService', 'scriptService', function (fileService, scriptService) {

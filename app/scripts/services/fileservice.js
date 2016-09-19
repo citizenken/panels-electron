@@ -8,11 +8,12 @@
  * Factory in the panels.
  */
 angular.module('panels')
-  .factory('fileService', ['utilityService', 'localFileService', 'lodash',
-    function (utilityService, localFileService, lodash) {
+  .factory('fileService', ['utilityService', 'localFileService', 'remoteFileService', 'lodash',
+    function (utilityService, localFileService, remoteFileService, lodash) {
     // Public API here
     return {
       files: {},
+      remoteFiles: {},
       currentFile: null,
       lastSave: null,
       create: function (scriptType) {
@@ -26,6 +27,21 @@ angular.module('panels')
         return newFile;
       },
 
+      syncFile: function (file) {
+        file = this.currentFile;
+        file.sync = true;
+        var remoteFile;
+        if (!lodash.has(this.remoteFiles, file.id)) {
+          remoteFile = remoteFileService.createFromLocal(file);
+          this.remoteFiles[file.id] = remoteFile;
+        } else {
+          remoteFile = this.remoteFiles[file.id];
+        }
+        remoteFile.save();
+        file.save();
+        console.log(this.files, this.remoteFiles);
+      },
+
       loadFiles: function () {
         // TODO: add logic to determine if connected to remote storage
 
@@ -34,6 +50,9 @@ angular.module('panels')
 
       updateCurrentFile: function () {
         this.currentFile.update(this.lastSave);
+        if (this.currentFile.sync) {
+          this.remoteFiles[this.currentFile.id].update(this.currentFile);
+        }
         this.lastSave = angular.copy(this.currentFile);
       },
 

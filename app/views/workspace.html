@@ -17,6 +17,9 @@
       <p class="navbar-text"><i ng-show="workspace.saved" class="block glyphicon glyphicon-floppy-saved"></i></p>
     </div><!--/.nav-collapse -->
   </nav>
+  <button ng-click="workspace.signIn()">Login</button>
+  <button ng-click="workspace.syncFile()">Sync</button>
+  <button ng-click="workspace.createFile()">Create</button>
   <div id="page-wrapper" class="row top-padding" ng-click="workspace.focusPage()">
     <div class="col-md-11 col-md-offset-custom">
       <div class="page col-md-11">
