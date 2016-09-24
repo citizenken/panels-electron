@@ -1,0 +1,54 @@
+<div ng-controller="SidebarCtrl as sidebar">
+  <div class="grid" ng-if="!sidebar.inspectHistory">
+    <div class="row">
+    </div>
+    <div class="row">
+      <uib-accordion close-others="true">
+        <div uib-accordion-group ng-repeat="file in workspace.files"  class="panel-default">
+          <uib-accordion-heading>
+            <p>{{ file.title || 'Untitled ' + file.type }} <span ng-if="file.id == workspace.workingFile.id">Current</span></p>
+          </uib-accordion-heading>
+          <ul class="list-inline">
+            <li>
+              <button type="button" class="btn btn-default" ng-click="workspace.changeFile(file.id)">
+                <span class="glyphicon glyphicon-edit"></span>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-time"></span>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="btn btn-default" ng-click="sidebar.showDetail(file.id)">
+                <span class="glyphicon glyphicon-info-sign"></span>
+              </button>
+            </li>
+          </ul>
+          <div ng-show="sidebar.detail == file.id">
+            <p>Sync remotely <input type="checkbox" name="" value="{{ file.sync }}"/></p>
+            <p>Script type: {{ file.type }}</p>
+            <p>Created on: {{ file.createdOn | date : 'shortDate' }}</p>
+            <p>Last modified:</br>{{ file.modifiedOn | date : 'short' }}</p>
+          </div>
+          <!-- <p ng-click="sidebar.showHistory(file)">History</p> -->
+          <!-- <uib-accordion close-others="true">
+            <div uib-accordion-group>
+              <uib-accordion-heading>Details</uib-accordion-heading>
+              <p>Sync remotely <input type="checkbox" name="" value="{{ file.sync }}"/></p>
+              <p>Script type: {{ file.type }}</p>
+              <p>Created on: {{ file.createdOn | date : 'shortDate' }}</p>
+              <p>Last modified:</br>{{ file.modifiedOn | date : 'short' }}</p>
+            </div>
+          </uib-accordion>
+        </div>
+      </uib-accordion> -->
+    </div>
+  </div>
+  <div class="grid" ng-if="sidebar.inspectHistory">
+    <ul class="list-group">
+      <li class="list-group-item" ng-repeat="history in sidebar.inspectHistory.history track by $index| orderBy:'modifiedOn'">
+        <p>{{ history.modifiedOn | date : 'short' }}</p>
+      </li>
+  </div>
+</div>

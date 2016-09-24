@@ -27,6 +27,10 @@ angular.module('panels')
         return newFile;
       },
 
+      setFile: function (fileId) {
+        this.currentFile = this.files[fileId];
+      },
+
       syncFile: function (file) {
         file = this.currentFile;
         file.sync = true;

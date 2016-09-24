@@ -17,7 +17,7 @@ angular.module('panels')
       this.modifiedOn = Date.now();
       this.author = null;
       this.content = null;
-      this.synced = false;
+      this.sync = false;
       this.type = scriptType;
       this.history = [];
       this.collaborators = [];

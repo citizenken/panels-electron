@@ -33,6 +33,9 @@ angular.module('panels')
     ctrl.showNavbar = false;
     ctrl.signIn = signIn;
     ctrl.syncFile = syncFile;
+    ctrl.files = {};
+    ctrl.setControllerFiles = setControllerFiles;
+    ctrl.changeFile = changeFile;
 
     function init () {
       if (!fileService.currentFile) {
@@ -40,8 +43,13 @@ angular.module('panels')
         fileService.setCurrentFile();
         scriptService.createScript();
       }
-      ctrl.workingFile = fileService.currentFile;
+      ctrl.setControllerFiles();
       scriptService.parseCurrentFile();
+    }
+
+    function setControllerFiles () {
+      ctrl.workingFile = fileService.currentFile;
+      ctrl.files = fileService.files;
     }
 
     function signIn () {
@@ -55,7 +63,13 @@ angular.module('panels')
     function createFile () {
       fileService.create('comicbook');
       fileService.setCurrentFile();
+      ctrl.setControllerFiles();
       // scriptService.generateElementHint();
+    }
+
+    function changeFile (fileId) {
+      fileService.setFile(fileId);
+      ctrl.setControllerFiles();
     }
 
     function codemirrorLoaded (editor) {
@@ -80,7 +94,8 @@ angular.module('panels')
         if (ctrl.workingFile) {
             var props = {};
             angular.forEach(ctrl.workingFile, function (value, key) {
-                if (key !== 'history') {
+                if (key !== 'history' ||
+                    key !== 'modifiedOn') {
                     props[key] = value;
                 }
             });
@@ -89,7 +104,10 @@ angular.module('panels')
             return null;
         }
     }, function (newVersion, oldVersion) {
-      if (!angular.equals(newVersion, oldVersion) && newVersion && oldVersion) {
+      // Save only when a new and old version exist, they aren't the same, and the are the same ID
+      if (newVersion && oldVersion &&
+        !angular.equals(newVersion, oldVersion) &&
+        newVersion.id === oldVersion.id) {
         if (newVersion.content !== oldVersion.content ||
           newVersion.title !== oldVersion.title) {
           if (ctrl.typeDelayTimer) {

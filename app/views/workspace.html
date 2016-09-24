@@ -1,5 +1,5 @@
 <snap-drawer>
-  <p>I'm a drawer! I maybe I've got some sweet navigation links.</p>
+  <div ng-include="'views/sidebar.html'"></div>
 </snap-drawer>
 
 <snap-content class="hide-snap-overflow">
@@ -10,7 +10,7 @@
       </button>
       <form class="navbar-form navbar-left" role="search">
         <div class="form-group">
-            <input type="text" class="form-control title-input" placeholder="Untitled {{ workspace.file.type }}"
+            <input type="text" class="form-control title-input" placeholder="Untitled {{ workspace.workingFile.type }}"
             pu-elastic-input pu-elastic-input-minwidth="200px" pu-elastic-input-maxwidth="1000px" ng-model="workspace.workingFile.title">
         </div>
       </form>
