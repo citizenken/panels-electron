@@ -12,7 +12,7 @@ angular.module('panels')
     function ($window, oauthService, $firebaseAuth, $firebaseObject) {
     var rootRef = $window.firebase.database();
 
-    return {
+    var firebaseService = {
       auth: $firebaseAuth(),
       users: rootRef.ref('users'),
       fileRoot: rootRef.ref('files'),
@@ -72,14 +72,9 @@ angular.module('panels')
         var self = this,
             fileRef = $firebaseObject(self.fileRoot.child(fileId));
         return fileRef.$loaded();
-      },
-
-      // synchUserFiles: function (files) {
-      //   angular.RemoteFile
-      // },
-
-      // synchFile: function () {
-
-      // }
+      }
     };
+
+
+    return firebaseService;
   }]);

@@ -13,13 +13,19 @@ angular.module('panels')
     // var filePrefix = 'panelsFile_';
     return {
       create: function (file) {
-        return new RemoteFile(file.type).fromRemote(file);
+        var newFile;
+        if (firebaseService.files[file.id]) {
+          newFile = new RemoteFile(file.type).fromRemote(firebaseService.files[file.id]);
+        } else {
+          newFile = new RemoteFile(file.type).fromRemote(file);
+        }
+        return newFile;
       },
 
       createFromLocal: function (file) {
-        var foo = new RemoteFile(file.type).fromLocal(file);
+        var remoteFile = new RemoteFile(file.type);
         console.log(firebaseService.files);
-        return foo;
+        return remoteFile;
       },
 
       getFileRemote: function (file) {

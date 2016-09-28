@@ -36,8 +36,10 @@ angular.module('panels')
     ctrl.files = {};
     ctrl.setControllerFiles = setControllerFiles;
     ctrl.changeFile = changeFile;
+    ctrl.saveCurrentfile = saveCurrentfile;
 
     function init () {
+      // $timeout(firebaseService.signIn(), 500);
       if (!fileService.currentFile) {
         fileService.create(ctrl.scriptType);
         fileService.setCurrentFile();
@@ -88,41 +90,55 @@ angular.module('panels')
       ctrl.tab = tab;
     }
 
+    function saveCurrentfile () {
+      if (ctrl.typeDelayTimer) {
+        $timeout.cancel(ctrl.typeDelayTimer);
+      }
+
+      scriptService.parseCurrentFile();
+      ctrl.typeDelayTimer = $timeout(function () {
+        fileService.updateCurrentFile();
+        ctrl.saved = true;
+        $timeout(function () {
+          ctrl.saved = false;
+        }, 1000);
+      }, 100);
+    }
+
     ctrl.init();
 
     $scope.$watch(function () {
         if (ctrl.workingFile) {
             var props = {};
             angular.forEach(ctrl.workingFile, function (value, key) {
-                if (key !== 'history' ||
-                    key !== 'modifiedOn') {
-                    props[key] = value;
-                }
+                props[key] = value;
             });
             return props;
         } else {
             return null;
         }
     }, function (newVersion, oldVersion) {
-      // Save only when a new and old version exist, they aren't the same, and the are the same ID
+      // Save only when versions are not in sync, but the file is the same (so not on file change)
       if (newVersion && oldVersion &&
-        !angular.equals(newVersion, oldVersion) &&
+        !fileService.compareFiles(newVersion, oldVersion, true, ['history', 'modifiedOn']) &&
         newVersion.id === oldVersion.id) {
-        if (newVersion.content !== oldVersion.content ||
-          newVersion.title !== oldVersion.title) {
-          if (ctrl.typeDelayTimer) {
-            $timeout.cancel(ctrl.typeDelayTimer);
-          }
 
-          scriptService.parseCurrentFile();
-          ctrl.typeDelayTimer = $timeout(function () {
-            fileService.updateCurrentFile();
-            ctrl.saved = true;
-            $timeout(function () {
-              ctrl.saved = false;
-            }, 1000);
-          }, 400);
+        // If there is a remote file, verify that is in not in sync too before updating
+        if (fileService.remoteFiles &&
+        fileService.remoteFiles[newVersion.id]) {
+          if (!fileService.compareFiles(newVersion, fileService.remoteFiles[newVersion.id], true, ['history', 'modifiedOn'])) {
+            if (newVersion.content !== oldVersion.content ||
+              newVersion.title !== oldVersion.title) {
+              ctrl.saveCurrentfile();
+            }
+          }
+        } else {
+          if (newVersion.content !== oldVersion.content ||
+            newVersion.title !== oldVersion.title) {
+            ctrl.saveCurrentfile();
+          }
         }
+
       }
     }, true);
   }]);

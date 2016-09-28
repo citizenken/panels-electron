@@ -8,10 +8,10 @@
  * Factory in the panels.
  */
 angular.module('panels')
-  .factory('fileService', ['utilityService', 'localFileService', 'remoteFileService', 'lodash',
-    function (utilityService, localFileService, remoteFileService, lodash) {
-    // Public API here
-    return {
+  .factory('fileService', ['utilityService', 'localFileService', 'remoteFileService', 'lodash', 'firebaseService', '$rootScope',
+    function (utilityService, localFileService, remoteFileService, lodash, firebaseService, $rootScope) {
+
+    var fileService = {
       files: {},
       remoteFiles: {},
       currentFile: null,
@@ -31,19 +31,39 @@ angular.module('panels')
         this.currentFile = this.files[fileId];
       },
 
-      syncFile: function (file) {
-        file = this.currentFile;
+      setSync: function (fileId) {
+        var file = this.files[fileId],
+            remoteFile;
         file.sync = true;
-        var remoteFile;
+
         if (!lodash.has(this.remoteFiles, file.id)) {
-          remoteFile = remoteFileService.createFromLocal(file);
+          remoteFile = remoteFileService.create(file);
           this.remoteFiles[file.id] = remoteFile;
         } else {
           remoteFile = this.remoteFiles[file.id];
         }
+
+        this.syncLocalAndRemote(file, remoteFile);
+
         remoteFile.save();
         file.save();
-        console.log(this.files, this.remoteFiles);
+      },
+
+      syncLocalAndRemote: function (local, remote) {
+        if (local.modifiedOn > remote.modifiedOn) {
+          remote.syncFileWithLocal(local);
+        } else {
+          local.syncFileWithRemote(remote);
+        }
+      },
+
+      unsetSync: function (fileId) {
+        var file = this.files[fileId];
+        file.sync = false;
+        if (this.remoteFiles[file.id]) {
+          delete this.remoteFiles[file.id];
+        }
+        file.save();
       },
 
       loadFiles: function () {
@@ -65,6 +85,65 @@ angular.module('panels')
           var lastModified = lodash.orderBy(lodash.toArray(this.files), 'modifiedOn', 'desc')[0];
           this.currentFile = lastModified;
         }
+      },
+
+      compareFiles: function (file1, file2, deleteFunctions, excludeKeys) {
+        var copy1 = angular.copy(file1),
+        copy2 = angular.copy(file2);
+        angular.forEach(excludeKeys, function (value) {
+          if (lodash.has(copy1, value)) {
+            delete copy1[value];
+          }
+          if (lodash.has(copy2, value)) {
+            delete copy2[value];
+          }
+        });
+
+        angular.forEach(copy1, function (value, key) {
+          if (typeof value === 'function') {
+            delete copy1[key];
+          }
+        });
+
+        angular.forEach(copy2, function (value, key) {
+          if (typeof value === 'function') {
+            delete copy2[key];
+          }
+        });
+
+        return angular.equals(copy1, copy2);
+      },
+
+      updateFilesOnRemoteChange: function (updatedFiles) {
+        var self = this,
+        id = self.currentFile.id,
+        remoteFirebaseFile = remoteFileService.create(updatedFiles[id]);
+
+        // compare firebase version to local and remote files
+        if (!self.compareFiles(self.currentFile, remoteFirebaseFile, true, ['history', 'modifiedOn']) &&
+          self.remoteFiles &&
+          lodash.has(self.remoteFiles, id) &&
+          !self.compareFiles(remoteFirebaseFile, self.remoteFiles[id], true, ['history', 'modifiedOn'])) {
+            self.remoteFiles[id].syncFileWithRemote()
+            .then(function () {
+              self.syncLocalAndRemote(self.files[id], self.remoteFiles[id]);
+            });
+        }
       }
     };
+
+
+    $rootScope.$watch(function () {
+      if (!angular.equals({}, firebaseService.files)) {
+        return firebaseService.files;
+      } else {
+        return null;
+      }
+    }, function (updatedFiles) {
+      if (updatedFiles) {
+        fileService.updateFilesOnRemoteChange(updatedFiles);
+      }
+    }, true);
+
+    return fileService;
   }]);

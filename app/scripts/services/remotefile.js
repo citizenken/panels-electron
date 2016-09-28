@@ -17,9 +17,9 @@ angular.module('panels')
         if (key[0] !== '$') {
           self[key] = value;
         }
-        self.id = remote.$id;
-        self.sync = true;
       });
+      self.id = remote.$id;
+      self.sync = true;
       return self;
     };
 
@@ -42,29 +42,26 @@ angular.module('panels')
     var syncFileWithRemote = function () {
       var self = this,
       firebaseFile = firebaseService.files[this.id];
-      // Insert logic to check modified on date
-      if (lodash.has(firebaseFile, 'modifiedOn') && firebaseFile.modifiedOn > this.modifiedOn) {
-        angular.forEach(firebaseFile, function (value, key) {
-          if (key[0] !== '$') {
-            self[key] = value;
-          }
-        });
+      return firebaseFile.$loaded()
+      .then(function (file) {
+        // Insert logic to check modified on date
+        if (lodash.has(file, 'modifiedOn') && file.modifiedOn > self.modifiedOn) {
+          angular.forEach(file, function (value, key) {
+            if (key[0] !== '$') {
+              self[key] = value;
+            }
+          });
 
-      } else {
-        angular.forEach(this, function (value, key) {
-          if (typeof value !== 'function') {
-            firebaseFile[key] = value;
-          }
-        });
+        } else {
+          angular.forEach(self, function (value, key) {
+            if (typeof value !== 'function') {
+              file[key] = value;
+            }
+          });
 
-      }
+        }
 
-      firebaseFile.$save()
-      .then(function (success) {
-        console.log(success);
-      })
-      .catch(function (error) {
-        console.log(error);
+        return file.$save();
       });
     };
 
