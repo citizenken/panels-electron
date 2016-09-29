@@ -25,8 +25,9 @@
               </button>
             </li>
           </ul>
+          sidebar: {{ sidebar.detail }} file:{{ file }}
           <div ng-show="sidebar.detail == file.id">
-            <p>Sync remotely <input type="checkbox" name="" value="{{ file.sync }}" ng-click="sidebar.setSync(file.id)"/></p>
+            <p>Sync remotely <input type="checkbox" name="" ng-model="file.sync" ng-click="sidebar.setSync(file.id)"/></p>
             <p>Script type: {{ file.type }}</p>
             <p>Created on: {{ file.createdOn | date : 'shortDate' }}</p>
             <p>Last modified:</br>{{ file.modifiedOn | date : 'short' }}</p>

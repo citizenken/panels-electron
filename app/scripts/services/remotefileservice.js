@@ -19,12 +19,16 @@ angular.module('panels')
         } else {
           newFile = new RemoteFile(file.type).fromRemote(file);
         }
+
+        newFile.id = file.id;
+        firebaseService.createFileRef(newFile);
+        newFile.author = firebaseService.userRef.id;
+
         return newFile;
       },
 
       createFromLocal: function (file) {
         var remoteFile = new RemoteFile(file.type);
-        console.log(firebaseService.files);
         return remoteFile;
       },
 

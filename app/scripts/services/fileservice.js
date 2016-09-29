@@ -50,9 +50,9 @@ angular.module('panels')
       },
 
       syncLocalAndRemote: function (local, remote) {
-        if (local.modifiedOn > remote.modifiedOn) {
+        if (local.modifiedOn >= remote.modifiedOn) {
           remote.syncFileWithLocal(local);
-        } else {
+        } else if (remote.modifiedOn > local.modifiedOn) {
           local.syncFileWithRemote(remote);
         }
       },
@@ -88,30 +88,34 @@ angular.module('panels')
       },
 
       compareFiles: function (file1, file2, deleteFunctions, excludeKeys) {
-        var copy1 = angular.copy(file1),
-        copy2 = angular.copy(file2);
-        angular.forEach(excludeKeys, function (value) {
-          if (lodash.has(copy1, value)) {
-            delete copy1[value];
-          }
-          if (lodash.has(copy2, value)) {
-            delete copy2[value];
-          }
-        });
-
-        angular.forEach(copy1, function (value, key) {
-          if (typeof value === 'function') {
-            delete copy1[key];
+        // var copy1 = angular.copy(file1),
+        // copy2 = angular.copy(file2);
+        var differences = [];
+        angular.forEach(file1, function (value, key) {
+          if (excludeKeys.indexOf(key) === -1 &&
+            typeof value === 'function' &&
+            value !== file2[key]) {
+            differences.append(key);
           }
         });
 
-        angular.forEach(copy2, function (value, key) {
-          if (typeof value === 'function') {
-            delete copy2[key];
-          }
-        });
+        // angular.forEach(copy1, function (value, key) {
+        //   if (typeof value === 'function') {
+        //     delete copy1[key];
+        //   }
+        // });
 
-        return angular.equals(copy1, copy2);
+        // angular.forEach(copy2, function (value, key) {
+        //   if (typeof value === 'function') {
+        //     delete copy2[key];
+        //   }
+        // });
+
+        // angular.forEach(copy1, function (value, key) {
+        //   if ()
+        // });
+
+        return (!angular.equals([], differences)) ? differences : null;
       },
 
       updateFilesOnRemoteChange: function (updatedFiles) {

@@ -8,8 +8,8 @@
  * Factory in the panelsElectronApp.
  */
 angular.module('panels')
-  .factory('firebaseService', ['$window', 'oauthService', '$firebaseAuth', '$firebaseObject',
-    function ($window, oauthService, $firebaseAuth, $firebaseObject) {
+  .factory('firebaseService', ['$window', 'oauthService', '$firebaseAuth', '$firebaseObject', '$q',
+    function ($window, oauthService, $firebaseAuth, $firebaseObject, $q) {
     var rootRef = $window.firebase.database();
 
     var firebaseService = {
@@ -72,6 +72,34 @@ angular.module('panels')
         var self = this,
             fileRef = $firebaseObject(self.fileRoot.child(fileId));
         return fileRef.$loaded();
+      },
+
+      createFileRef: function (file) {
+        var self = this,
+        newRef = $firebaseObject(self.fileRoot.child(file.id));
+        return newRef.$loaded(function (data) {
+          if (data.$value === null) {
+            angular.forEach(file, function (value, key) {
+              if (typeof value !== 'function') {
+                data[key] = value;
+              }
+            });
+            data.author = self.userRef.id;
+            return data.$save();
+          } else {
+            return $q.reject();
+          }
+        })
+        .then(function (data) {
+          return $firebaseObject(data).$loaded();
+        })
+        .then(function (data) {
+          self.userRef.files[data.id] = true;
+          return self.userRef.$save();
+        })
+        .then(function (data) {
+          return $firebaseObject(data).$loaded();
+        });
       }
     };
 

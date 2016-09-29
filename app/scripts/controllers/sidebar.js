@@ -25,10 +25,11 @@ angular.module('panels')
     }
 
     function setSync (fileId) {
-      if (!fileService.files[fileId].sync) {
+      if (fileService.files[fileId].sync) {
         fileService.setSync(fileId);
       } else {
         fileService.unsetSync(fileId);
       }
+      console.log(ctrl.detail);
     }
   }]);
