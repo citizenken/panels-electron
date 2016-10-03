@@ -57,11 +57,7 @@ angular.module('panels')
         var files = {};
           // remoteFiles = {};
         angular.forEach(userRef.files, function (value, key) {
-          self.getRemoteFile(key)
-          .then(function (file) {
-            files[key] = file;
-            // remoteFiles[key] = remoteFileService.create(file);
-          });
+          files[key] = self.getRemoteFile(key);
         });
         self.files = files;
 
@@ -69,9 +65,8 @@ angular.module('panels')
       },
 
       getRemoteFile: function (fileId) {
-        var self = this,
-            fileRef = $firebaseObject(self.fileRoot.child(fileId));
-        return fileRef.$loaded();
+        var self = this;
+        return $firebaseObject(self.fileRoot.child(fileId));
       },
 
       createFileRef: function (file) {

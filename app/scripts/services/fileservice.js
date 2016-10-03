@@ -8,8 +8,8 @@
  * Factory in the panels.
  */
 angular.module('panels')
-  .factory('fileService', ['utilityService', 'localFileService', 'remoteFileService', 'lodash', 'firebaseService', '$rootScope',
-    function (utilityService, localFileService, remoteFileService, lodash, firebaseService, $rootScope) {
+  .factory('fileService', ['utilityService', 'localFileService', 'remoteFileService', 'lodash',
+    function (utilityService, localFileService, remoteFileService, lodash) {
 
     var fileService = {
       files: {},
@@ -32,21 +32,7 @@ angular.module('panels')
       },
 
       setSync: function (fileId) {
-        var file = this.files[fileId],
-            remoteFile;
-        file.sync = true;
-
-        if (!lodash.has(this.remoteFiles, file.id)) {
-          remoteFile = remoteFileService.create(file);
-          this.remoteFiles[file.id] = remoteFile;
-        } else {
-          remoteFile = this.remoteFiles[file.id];
-        }
-
-        this.syncLocalAndRemote(file, remoteFile);
-
-        remoteFile.save();
-        file.save();
+        this.files[fileId].setSync();
       },
 
       syncLocalAndRemote: function (local, remote) {
@@ -74,9 +60,9 @@ angular.module('panels')
 
       updateCurrentFile: function () {
         this.currentFile.update(this.lastSave);
-        if (this.currentFile.sync) {
-          this.remoteFiles[this.currentFile.id].update(this.currentFile);
-        }
+        // if (this.currentFile.sync) {
+        //   this.remoteFiles[this.currentFile.id].update(this.currentFile);
+        // }
         this.lastSave = angular.copy(this.currentFile);
       },
 
@@ -93,9 +79,9 @@ angular.module('panels')
         var differences = [];
         angular.forEach(file1, function (value, key) {
           if (excludeKeys.indexOf(key) === -1 &&
-            typeof value === 'function' &&
+            typeof value !== 'function' &&
             value !== file2[key]) {
-            differences.append(key);
+            differences.push(key);
           }
         });
 
@@ -118,36 +104,36 @@ angular.module('panels')
         return (!angular.equals([], differences)) ? differences : null;
       },
 
-      updateFilesOnRemoteChange: function (updatedFiles) {
-        var self = this,
-        id = self.currentFile.id,
-        remoteFirebaseFile = remoteFileService.create(updatedFiles[id]);
+      // updateFilesOnRemoteChange: function (updatedFiles) {
+      //   var self = this,
+      //   id = self.currentFile.id,
+      //   remoteFirebaseFile = remoteFileService.create(updatedFiles[id]);
 
-        // compare firebase version to local and remote files
-        if (!self.compareFiles(self.currentFile, remoteFirebaseFile, true, ['history', 'modifiedOn']) &&
-          self.remoteFiles &&
-          lodash.has(self.remoteFiles, id) &&
-          !self.compareFiles(remoteFirebaseFile, self.remoteFiles[id], true, ['history', 'modifiedOn'])) {
-            self.remoteFiles[id].syncFileWithRemote()
-            .then(function () {
-              self.syncLocalAndRemote(self.files[id], self.remoteFiles[id]);
-            });
-        }
-      }
+      //   // compare firebase version to local and remote files
+      //   if (!self.compareFiles(self.currentFile, remoteFirebaseFile, true, ['history', 'modifiedOn']) &&
+      //     self.remoteFiles &&
+      //     lodash.has(self.remoteFiles, id) &&
+      //     !self.compareFiles(remoteFirebaseFile, self.remoteFiles[id], true, ['history', 'modifiedOn'])) {
+      //       self.remoteFiles[id].syncFileWithRemote()
+      //       .then(function () {
+      //         self.syncLocalAndRemote(self.files[id], self.remoteFiles[id]);
+      //       });
+      //   }
+      // }
     };
 
 
-    $rootScope.$watch(function () {
-      if (!angular.equals({}, firebaseService.files)) {
-        return firebaseService.files;
-      } else {
-        return null;
-      }
-    }, function (updatedFiles) {
-      if (updatedFiles) {
-        fileService.updateFilesOnRemoteChange(updatedFiles);
-      }
-    }, true);
+    // $rootScope.$watch(function () {
+    //   if (!angular.equals({}, firebaseService.files)) {
+    //     return firebaseService.files;
+    //   } else {
+    //     return null;
+    //   }
+    // }, function (updatedFiles) {
+    //   if (updatedFiles) {
+    //     fileService.updateFilesOnRemoteChange(updatedFiles);
+    //   }
+    // }, true);
 
     return fileService;
   }]);
