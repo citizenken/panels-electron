@@ -8,8 +8,8 @@
  * Controller of the panels
  */
 angular.module('panels')
-  .controller('WorkspaceCtrl', ['$scope', '$rootScope', '$timeout', 'fileService', 'scriptService', 'firebaseService',
-    function ($scope, $rootScope, $timeout, fileService, scriptService, firebaseService) {
+  .controller('WorkspaceCtrl', ['$scope', '$rootScope', '$timeout', 'fileService', 'scriptService', 'firebaseService', 'localFileService',
+    function ($scope, $rootScope, $timeout, fileService, scriptService, firebaseService, localFileService) {
     var ctrl = this;
     ctrl.editorOptions = {
         lineWrapping : true,
@@ -55,7 +55,12 @@ angular.module('panels')
     }
 
     function signIn () {
-      firebaseService.signIn();
+      firebaseService.signIn()
+      .then(function () {
+        angular.forEach(firebaseService.files, function (value, key) {
+          fileService.createFromRemote(value);
+        })
+      });
     }
 
     function syncFile () {

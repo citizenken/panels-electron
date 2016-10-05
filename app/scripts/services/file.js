@@ -23,10 +23,10 @@ angular.module('panels')
       this.collaborators = [];
       this.related = [];
 
-      this.update = function (oldVersion) {
+      this.update = function (oldVersion, sync) {
         this.addHistory(oldVersion);
         this.modifiedOn = Date.now();
-        this.save();
+        this.save(sync);
       };
 
       this.addHistory = function (oldVersion) {

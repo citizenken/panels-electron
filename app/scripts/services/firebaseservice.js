@@ -25,7 +25,7 @@ angular.module('panels')
           provider = 'google';
         }
 
-        oauthService.googleOauth()
+        return oauthService.googleOauth()
         .then(function (token) {
           var credential = window.firebase.auth.GoogleAuthProvider.credential(token);
           return self.auth.$signInWithCredential(credential);

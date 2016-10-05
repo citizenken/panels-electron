@@ -8,7 +8,7 @@
  * Factory in the panels.
  */
 angular.module('panels')
-  .factory('localFileService', ['LocalFile', function (LocalFile) {
+  .factory('localFileService', ['LocalFile', '$q', function (LocalFile, $q) {
     var filePrefix = 'panelsFile_';
     return {
       create: function (scriptType) {
@@ -30,15 +30,17 @@ angular.module('panels')
       fromRemote: function (remoteFile) {
         var self = this,
         file = {};
-
-        angular.forEach(remoteFile, function (value, key) {
-          if (key[0] !== '$' &&
-            typeof value !== 'function') {
-            file[key] = value;
-          }
+        return remoteFile.$loaded()
+        .then(function () {
+          angular.forEach(remoteFile, function (value, key) {
+            if (key[0] !== '$' &&
+              typeof value !== 'function') {
+              file[key] = value;
+            }
+          });
+          console.log(self.revive(file));
+          return $q.resolve(self.revive(file));
         });
-
-        return self.revive(file);
       },
 
       revive: function (file) {

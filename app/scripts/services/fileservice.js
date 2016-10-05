@@ -27,6 +27,14 @@ angular.module('panels')
         return newFile;
       },
 
+      createFromRemote: function (remoteFile) {
+        var self = this;
+        localFileService.fromRemote(remoteFile)
+        .then(function (newFile) {
+          self.files[newFile.id] = newFile;
+        });
+      },
+
       setFile: function (fileId) {
         this.currentFile = this.files[fileId];
       },

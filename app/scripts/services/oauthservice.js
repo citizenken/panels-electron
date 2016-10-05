@@ -42,12 +42,12 @@ angular.module('panels')
           authWindow.show();
         });
 
-        authWindow.webContents.on('will-navigate', function (event, url) {
-          deferred.resolve(self.handleGoogleCallback(url));
-        });
+        // authWindow.webContents.on('will-navigate', function (event, url) {
+        //   deferred.resolve(self.handleGoogleCallback(url));
+        // });
 
         authWindow.webContents.on('did-get-redirect-request', function (event, oldUrl, newUrl) {
-          if (newUrl.indexOf(requestOptions.redirect_uri) > -1) {
+          if (newUrl.indexOf(requestOptions.redirect_uri) === 0) {
             deferred.resolve(self.handleGoogleCallback(newUrl));
           }
         });
