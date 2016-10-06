@@ -8,8 +8,10 @@
  * Controller of the panels
  */
 angular.module('panels')
-  .controller('WorkspaceCtrl', ['$scope', '$rootScope', '$timeout', 'fileService', 'scriptService', 'firebaseService', 'localFileService',
-    function ($scope, $rootScope, $timeout, fileService, scriptService, firebaseService, localFileService) {
+  .controller('WorkspaceCtrl', ['$scope', '$rootScope', '$timeout', 'fileService', 'scriptService',
+    'firebaseService', 'watcherService',
+    function ($scope, $rootScope, $timeout, fileService, scriptService,
+      firebaseService, watcherService) {
     var ctrl = this;
     ctrl.editorOptions = {
         lineWrapping : true,
@@ -57,9 +59,13 @@ angular.module('panels')
     function signIn () {
       firebaseService.signIn()
       .then(function () {
-        angular.forEach(firebaseService.files, function (value, key) {
-          fileService.createFromRemote(value);
-        })
+        angular.forEach(firebaseService.files, function (value) {
+          value.$loaded()
+          .then(function () {
+            fileService.createFromRemote(value);
+            fileService.files[value.id].setWatch();
+          });
+        });
       });
     }
 
@@ -112,7 +118,8 @@ angular.module('panels')
 
     ctrl.init();
 
-    $scope.$watch(function () {
+
+    watcherService.create('currentFileUpdate', function () {
         if (ctrl.workingFile) {
             var props = {};
             angular.forEach(ctrl.workingFile, function (value, key) {
@@ -125,7 +132,6 @@ angular.module('panels')
     }, function (newVersion, oldVersion) {
       // Save only when versions are not in sync, but the file is the same (so not on file change)
       if (newVersion && oldVersion &&
-        !fileService.compareFiles(newVersion, oldVersion, true, ['history', 'modifiedOn']) &&
         newVersion.id === oldVersion.id) {
 
         // If there is a remote file, verify that is in not in sync too before updating
@@ -145,5 +151,7 @@ angular.module('panels')
         }
 
       }
-    }, true);
+    }, true, $scope);
+
+    watcherService.enable($scope, 'currentFileUpdate');
   }]);

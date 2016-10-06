@@ -8,28 +8,45 @@
  * Factory in the panels.
  */
 angular.module('panels')
-  .factory('LocalFile', ['File', 'firebaseService', 'lodash', '$q',
-    function (File, firebaseService, lodash, $q) {
+  .factory('LocalFile', ['File', 'firebaseService', 'lodash', '$q', 'watcherService',
+    function (File, firebaseService, lodash, $q, watcherService) {
     var filePrefix = 'panelsFile_';
+
+    // var syncFileWithRemote = function () {
+    //   var self = this,
+    //   firebaseFile;
+
+    //   if (lodash.has(firebaseService.files, self.id)) {
+    //     firebaseFile = firebaseService.files[self.id];
+    //     self.diffFileWithRemoteAndSync(firebaseFile);
+    //   } else {
+    //     firebaseService.createFileRef(self)
+    //     .then(function (firebaseFile) {
+    //       self.diffFileWithRemoteAndSync(firebaseFile);
+    //     });
+    //   }
+    // };
 
     var syncRemoteToLocal = function () {
       var self = this,
       oldVersion = angular.copy(self),
       excludeKeys = ['history', 'modifiedOn'],
       firebaseFile = firebaseService.files[self.id];
-      return firebaseFile.$loaded(function (remoteFile) {
-        return self.getDifferences(excludeKeys)
-        .then(function (differences) {
-          if (remoteFile.modifiedOn > self.modifiedOn) {
-            angular.forEach(differences, function (value) {
-              self[value] = remoteFile[value];
-            });
-          }
-
-          if (differences.length > 0) {
-            self.update(oldVersion, false);
-          }
-        });
+      return firebaseFile.$loaded()
+      .then(function (remoteFile) {
+        var localDifferences = self.getDifferences(remoteFile, self, excludeKeys);
+        var toCopy = localDifferences.concat(excludeKeys);
+        if (remoteFile.modifiedOn > self.modifiedOn && localDifferences.length > 0) {
+          watcherService.disable('currentFileUpdate');
+          angular.forEach(toCopy, function (value) {
+            self[value] = remoteFile[value];
+          });
+          self.update(oldVersion, false);
+          watcherService.enable(null, 'currentFileUpdate');
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
       });
     };
 
@@ -38,28 +55,28 @@ angular.module('panels')
       excludeKeys = ['history', 'modifiedOn'],
       firebaseFile = firebaseService.files[self.id];
       return firebaseFile.$loaded(function (remoteFile) {
-        return self.getDifferences(excludeKeys)
-        .then(function (differences) {
-          angular.forEach(differences, function (value) {
+        var remoteDifferences = self.getDifferences(self, remoteFile, excludeKeys),
+        toCopy = remoteDifferences.concat(excludeKeys);
+        if (remoteDifferences.length > 0) {
+          angular.forEach(toCopy, function (value) {
             remoteFile[value] = self[value];
           });
 
-          if (differences.length > 0) {
-            return remoteFile.$save();
-          } else {
-            return $q.reject();
-          }
-        });
+          return remoteFile.$save();
+        } else {
+          return $q.reject();
+        }
       });
-    };    
+    };
 
     var setWatch = function () {
-      if (lodash.has(firebaseService.files, self.id)) {
+      var self = this;
+      if (self.sync && lodash.has(firebaseService.files, self.id)) {
         self.unwatch = firebaseService.files[self.id].$watch(function () {
           self.syncRemoteToLocal();
         });
       }
-    }
+    };
 
     var setSync = function () {
       var self = this;
@@ -70,33 +87,28 @@ angular.module('panels')
 
     var save = function (sync) {
       var self = this;
+      sync = (typeof sync === 'undefined') ? true : sync;
       if (sync && self.sync && lodash.has(firebaseService.files, self.id)) {
         self.syncLocalToRemote();
       }
       return localStorage.setItem(filePrefix + this.id, JSON.stringify(this));
     };
 
-    var getDifferences = function (excludeKeys) {
-      var self = this,
-      remote = firebaseService.files[self.id];
-      return remote.$loaded(function (remoteFile) {
-        var differences = [];
-        angular.forEach(self, function (value, key) {
-          if (excludeKeys.indexOf(key) === -1 &&
-            typeof value !== 'function' &&
-            value.length > 0 &&
-            value !== remoteFile[key]) {
-            differences.push(key);
-          }
-        });
-
-        if (!angular.equals([], differences)) {
-          return $q.resolve(differences);
-        } else {
-          return $q.reject(null);
+    var getDifferences = function (file1, file2, excludeKeys) {
+      var differences = [];
+      angular.forEach(file1, function (value, key) {
+        if (excludeKeys.indexOf(key) === -1 &&
+          !lodash.isFunction(value) &&
+          value !== file2[key]) {
+            if (lodash.isArray(value) && !lodash.isEmpty(value)) {
+              differences.push(key);
+            } else if (lodash.isString(value)) {
+              differences.push(key);
+            }
         }
-
       });
+
+      return differences;
     };
 
     return function LocalFile (scriptType) {
@@ -107,6 +119,14 @@ angular.module('panels')
       this.syncLocalToRemote = syncLocalToRemote;
       this.setWatch = setWatch;
       this.setSync = setSync;
+      this.setWatch = setWatch;
+      // this.syncFileWithRemote = syncFileWithRemote;
+      this.syncRemoteToLocal = syncRemoteToLocal;
+      this.syncLocalToRemote = syncLocalToRemote;
       this.getDifferences = getDifferences;
+
+      if (this.sync) {
+        this.setWatch();
+      }
     };
   }]);

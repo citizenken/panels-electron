@@ -72,6 +72,7 @@ angular.module('panels')
       createFileRef: function (file) {
         var self = this,
         newRef = $firebaseObject(self.fileRoot.child(file.id));
+        self.files[file.id] = newRef;
         return newRef.$loaded(function (data) {
           if (data.$value === null) {
             angular.forEach(file, function (value, key) {
