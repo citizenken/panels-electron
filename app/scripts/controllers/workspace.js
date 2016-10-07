@@ -9,9 +9,9 @@
  */
 angular.module('panels')
   .controller('WorkspaceCtrl', ['$scope', '$rootScope', '$timeout', 'fileService', 'scriptService',
-    'firebaseService', 'watcherService', 'lodash',
+    'firebaseService', 'watcherService', 'lodash', 'onlineService',
     function ($scope, $rootScope, $timeout, fileService, scriptService,
-      firebaseService, watcherService, lodash) {
+      firebaseService, watcherService, lodash, onlineService) {
     var ctrl = this;
     ctrl.editorOptions = {
         lineWrapping : true,
@@ -39,16 +39,26 @@ angular.module('panels')
     ctrl.setControllerFiles = setControllerFiles;
     ctrl.changeFile = changeFile;
     ctrl.saveCurrentfile = saveCurrentfile;
+    ctrl.initFiles = initFiles;
 
     function init () {
-      // $timeout(firebaseService.signIn(), 500);
+      if (onlineService.online && firebaseService.hasFirebaseAuthStored()) {
+        firebaseService.signIn()
+        .then(fileService.loadFromRemote.bind(fileService))
+        .then(ctrl.initFiles);
+      } else {
+        ctrl.initFiles();
+      }
+    }
+
+    function initFiles () {
       if (!fileService.currentFile) {
         fileService.create(ctrl.scriptType);
         fileService.setCurrentFile();
         scriptService.createScript();
       }
       ctrl.setControllerFiles();
-      scriptService.parseCurrentFile();
+      scriptService.parseCurrentFile();      
     }
 
     function setControllerFiles () {

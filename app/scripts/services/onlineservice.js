@@ -8,28 +8,17 @@
  * Factory in the panelsElectronApp.
  */
 angular.module('panels')
-  .factory('onlineService', ['$window', function ($window) {
-    var onlineService = {
-      onlineStatus: null
-    };
-
-    $window.addEventListener('load', function() {
-      if (navigator.onLine) {
-        console.log('We\'re online!');
-      } else {
-        console.log('We\'re offline...');
+  .factory('onlineService', ['$window', '$rootScope', function ($window, $rootScope) {
+    var service = {
+      online: null,
+      updateOnlineStatus: function () {
+        this.online = navigator.onLine;
+        $rootScope.$emit('onlineStatusChange', service.onLine);
       }
-    }, false);
+    };
+    service.updateOnlineStatus();
+    $window.addEventListener('online',  service.updateOnlineStatus);
+    $window.addEventListener('offline', service.updateOnlineStatus);
 
-    $window.addEventListener('online', function() {
-      onlineService.onlineStatus = 'online';
-      console.log('And we\'re back :).');
-    }, false);
-
-    $window.addEventListener('offline', function() {
-      onlineService.onlineStatus = 'offline';
-      console.log('Connection is down.');
-    }, false);
-
-    return onlineService;
+    return service;
   }]);

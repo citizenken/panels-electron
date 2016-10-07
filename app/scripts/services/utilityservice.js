@@ -18,5 +18,13 @@ angular.module('panels')
         }
         return text;
       },
+
+      getLocalStorageKeys: function () {
+        var keys = [];
+        for (var key in localStorage){
+          keys.push(key);
+        }
+        return keys;
+      }
     };
   });

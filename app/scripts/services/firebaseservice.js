@@ -8,8 +8,8 @@
  * Factory in the panelsElectronApp.
  */
 angular.module('panels')
-  .factory('firebaseService', ['$window', 'oauthService', '$firebaseAuth', '$firebaseObject', '$q',
-    function ($window, oauthService, $firebaseAuth, $firebaseObject, $q) {
+  .factory('firebaseService', ['$window', 'oauthService', '$firebaseAuth', '$firebaseObject', '$q', 'utilityService',
+    function ($window, oauthService, $firebaseAuth, $firebaseObject, $q, utilityService) {
     var rootRef = $window.firebase.database();
 
     var firebaseService = {
@@ -19,6 +19,19 @@ angular.module('panels')
       firebaseUser: null,
       userRef: null,
       files: {},
+
+      hasFirebaseAuthStored: function () {
+        var keys = utilityService.getLocalStorageKeys(),
+        firebaseStored = false;
+
+        angular.forEach(keys, function (value) {
+          if (value.match(/firebase:authUser.*/)) {
+            firebaseStored = true;
+          }
+        })
+        return firebaseStored;
+      },
+
       signIn: function (provider) {
         var self = this;
         if (!provider) {

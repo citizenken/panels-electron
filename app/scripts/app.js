@@ -30,15 +30,6 @@ angular
     window.firebase.initializeApp(config);
     snapRemoteProvider.globalOptions.touchToDrag = false;
   }])
-  .run(['$window', function ($window) {
-      $window.addEventListener("offline", function() {
-        console.log(navigator.onLine);
-      }, false);
-
-      $window.addEventListener("online", function() {
-        console.log(navigator.onLine);
-      }, false);
-  }])
   .run(['firebaseService', function (firebaseService) {
     if (firebaseService.auth.$getAuth()) {
       console.log('foo');
