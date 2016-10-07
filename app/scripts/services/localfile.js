@@ -12,20 +12,15 @@ angular.module('panels')
     function (File, firebaseService, lodash, $q, watcherService) {
     var filePrefix = 'panelsFile_';
 
-    // var syncFileWithRemote = function () {
-    //   var self = this,
-    //   firebaseFile;
+    var syncFiles = function (remoteFile) {
+      var self = this;
 
-    //   if (lodash.has(firebaseService.files, self.id)) {
-    //     firebaseFile = firebaseService.files[self.id];
-    //     self.diffFileWithRemoteAndSync(firebaseFile);
-    //   } else {
-    //     firebaseService.createFileRef(self)
-    //     .then(function (firebaseFile) {
-    //       self.diffFileWithRemoteAndSync(firebaseFile);
-    //     });
-    //   }
-    // };
+      if (remoteFile.modifiedOn > self.modifiedOn) {
+        self.syncRemoteToLocal();
+      } else if (remoteFile.modifiedOn < self.modifiedOn) {
+        self.syncLocalToRemote();
+      }
+    };
 
     var syncRemoteToLocal = function () {
       var self = this,
@@ -120,7 +115,7 @@ angular.module('panels')
       this.setWatch = setWatch;
       this.setSync = setSync;
       this.setWatch = setWatch;
-      // this.syncFileWithRemote = syncFileWithRemote;
+      this.syncFiles = syncFiles;
       this.syncRemoteToLocal = syncRemoteToLocal;
       this.syncLocalToRemote = syncLocalToRemote;
       this.getDifferences = getDifferences;

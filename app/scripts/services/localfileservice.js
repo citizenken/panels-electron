@@ -39,7 +39,7 @@ angular.module('panels')
               file[key] = value;
             }
           });
-          console.log(self.revive(file));
+
           return $q.resolve(self.revive(file));
         });
       },

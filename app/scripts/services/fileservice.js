@@ -8,8 +8,8 @@
  * Factory in the panels.
  */
 angular.module('panels')
-  .factory('fileService', ['utilityService', 'localFileService', 'remoteFileService', 'lodash',
-    function (utilityService, localFileService, remoteFileService, lodash) {
+  .factory('fileService', ['utilityService', 'localFileService', 'remoteFileService', 'lodash', '$q', 'firebaseService',
+    function (utilityService, localFileService, remoteFileService, lodash, $q, firebaseService) {
 
     var fileService = {
       files: {},
@@ -29,9 +29,10 @@ angular.module('panels')
 
       createFromRemote: function (remoteFile) {
         var self = this;
-        localFileService.fromRemote(remoteFile)
+        return localFileService.fromRemote(remoteFile)
         .then(function (newFile) {
           self.files[newFile.id] = newFile;
+          return $q.resolve(newFile);
         });
       },
 
@@ -128,7 +129,24 @@ angular.module('panels')
       //       });
       //   }
       // }
+      loadFromRemote: function (files) {
+        var self = this;
+        angular.forEach(files, function (value) {
+          value.$loaded()
+          .then(function () {
+            if (!lodash.has(self.files, value.id)) {
+              self.createFromRemote(value)
+              .then(function () {
+                self.files[value.id].setWatch();
+              });
+            } else {
+              self.files[value.id].syncFiles(value);
+            }
+          });
+        });
+      }
     };
+
 
 
     // $rootScope.$watch(function () {

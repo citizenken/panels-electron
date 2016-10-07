@@ -9,9 +9,9 @@
  */
 angular.module('panels')
   .controller('WorkspaceCtrl', ['$scope', '$rootScope', '$timeout', 'fileService', 'scriptService',
-    'firebaseService', 'watcherService',
+    'firebaseService', 'watcherService', 'lodash',
     function ($scope, $rootScope, $timeout, fileService, scriptService,
-      firebaseService, watcherService) {
+      firebaseService, watcherService, lodash) {
     var ctrl = this;
     ctrl.editorOptions = {
         lineWrapping : true,
@@ -58,15 +58,7 @@ angular.module('panels')
 
     function signIn () {
       firebaseService.signIn()
-      .then(function () {
-        angular.forEach(firebaseService.files, function (value) {
-          value.$loaded()
-          .then(function () {
-            fileService.createFromRemote(value);
-            fileService.files[value.id].setWatch();
-          });
-        });
-      });
+      .then(fileService.loadFromRemote.bind(fileService));
     }
 
     function syncFile () {
