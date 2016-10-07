@@ -38,27 +38,26 @@ angular.module('panels')
     ctrl.files = {};
     ctrl.setControllerFiles = setControllerFiles;
     ctrl.changeFile = changeFile;
-    ctrl.saveCurrentfile = saveCurrentfile;
-    ctrl.initFiles = initFiles;
+    ctrl.loadFiles = loadFiles;
 
     function init () {
       if (onlineService.online && firebaseService.hasFirebaseAuthStored()) {
         firebaseService.signIn()
         .then(fileService.loadFromRemote.bind(fileService))
-        .then(ctrl.initFiles);
+        .then(ctrl.loadFiles);
       } else {
-        ctrl.initFiles();
+        ctrl.loadFiles();
       }
     }
 
-    function initFiles () {
+    function loadFiles () {
       if (!fileService.currentFile) {
         fileService.create(ctrl.scriptType);
         fileService.setCurrentFile();
-        scriptService.createScript();
+        scriptService.createScript(fileService.currentFile);
       }
       ctrl.setControllerFiles();
-      scriptService.parseCurrentFile();      
+      scriptService.parseCurrentFile(fileService.currentFile);      
     }
 
     function setControllerFiles () {
@@ -103,21 +102,6 @@ angular.module('panels')
       ctrl.tab = tab;
     }
 
-    function saveCurrentfile () {
-      if (ctrl.typeDelayTimer) {
-        $timeout.cancel(ctrl.typeDelayTimer);
-      }
-
-      scriptService.parseCurrentFile();
-      ctrl.typeDelayTimer = $timeout(function () {
-        fileService.updateCurrentFile();
-        ctrl.saved = true;
-        $timeout(function () {
-          ctrl.saved = false;
-        }, 1000);
-      }, 100);
-    }
-
     ctrl.init();
 
 
@@ -131,29 +115,7 @@ angular.module('panels')
         } else {
             return null;
         }
-    }, function (newVersion, oldVersion) {
-      // Save only when versions are not in sync, but the file is the same (so not on file change)
-      if (newVersion && oldVersion &&
-        newVersion.id === oldVersion.id) {
-
-        // If there is a remote file, verify that is in not in sync too before updating
-        if (fileService.remoteFiles &&
-        fileService.remoteFiles[newVersion.id]) {
-          if (!fileService.compareFiles(newVersion, fileService.remoteFiles[newVersion.id], true, ['history', 'modifiedOn'])) {
-            if (newVersion.content !== oldVersion.content ||
-              newVersion.title !== oldVersion.title) {
-              ctrl.saveCurrentfile();
-            }
-          }
-        } else {
-          if (newVersion.content !== oldVersion.content ||
-            newVersion.title !== oldVersion.title) {
-            ctrl.saveCurrentfile();
-          }
-        }
-
-      }
-    }, true, $scope);
+    }, fileService.saveOnChange.bind(fileService), true, $scope);
 
     watcherService.enable($scope, 'currentFileUpdate');
   }]);

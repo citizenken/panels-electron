@@ -8,19 +8,19 @@
  * Factory in the panelsElectronApp.
  */
 angular.module('panels')
-  .factory('scriptService', ['$rootScope', 'fileService', 'lodash',
-    function ($rootScope, fileService, lodash) {
+  .factory('scriptService', ['$rootScope', 'lodash',
+    function ($rootScope, lodash) {
     return {
       script: null,
-      createScript: function () {
-        this.script = new window.Script(fileService.currentFile.type);
+      createScript: function (currentFile) {
+        this.script = new window.Script(currentFile.type);
       },
 
-      parseCurrentFile: function () {
-        if (typeof(fileService.currentFile.content) !== 'undefined' &&
-        fileService.currentFile.content !== null) {
-          this.createScript();
-          this.script.fromBlob(fileService.currentFile.content);
+      parseCurrentFile: function (currentFile) {
+        if (typeof(currentFile.content) !== 'undefined' &&
+        currentFile.content !== null) {
+          this.createScript(currentFile);
+          this.script.fromBlob(currentFile.content);
           $rootScope.$emit('renderScript');
         }
       },

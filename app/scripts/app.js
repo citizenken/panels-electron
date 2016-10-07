@@ -39,7 +39,7 @@ angular
     fileService.loadFiles();
     fileService.setCurrentFile();
     if (fileService.currentFile) {
-        scriptService.createScript();
+        scriptService.createScript(fileService.currentFile);
     }
   }])
   .run(['hintService', function (hintService) {

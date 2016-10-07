@@ -8,14 +8,19 @@
  * Factory in the panels.
  */
 angular.module('panels')
-  .factory('fileService', ['utilityService', 'localFileService', 'remoteFileService', 'lodash', '$q', 'firebaseService',
-    function (utilityService, localFileService, remoteFileService, lodash, $q, firebaseService) {
+  .factory('fileService', ['utilityService', 'localFileService', 'remoteFileService', 
+    'lodash', '$q', 'firebaseService', '$timeout', 'scriptService',
+    function (utilityService, localFileService, remoteFileService, 
+      lodash, $q, firebaseService, $timeout, scriptService) {
 
     var fileService = {
       files: {},
       remoteFiles: {},
       currentFile: null,
       lastSave: null,
+      typeDelayTimer: null,
+      saved: false,
+
       create: function (scriptType) {
         // var newFile = new File(scriptType);
 
@@ -144,22 +149,50 @@ angular.module('panels')
             }
           });
         });
+      },
+
+      saveCurrentfile: function () {
+        var self = this
+        if (self.typeDelayTimer) {
+          $timeout.cancel(self.typeDelayTimer);
+        }
+
+        scriptService.parseCurrentFile(self.currentFile);
+        self.typeDelayTimer = $timeout(function () {
+          fileService.updateCurrentFile();
+          self.saved = true;
+          $timeout(function () {
+            self.saved = false;
+          }, 1000);
+        }, 100);
+      },    
+
+      saveOnChange: function (newVersion, oldVersion) {
+        var self = this;
+        // Save only when versions are not in sync, but the file is the same (so not on file change)
+        if (newVersion && oldVersion &&
+          newVersion.id === oldVersion.id) {
+
+          // If there is a remote file, verify that is in not in sync too before updating
+          if (self.remoteFiles &&
+          self.remoteFiles[newVersion.id]) {
+            if (!self.compareFiles(newVersion, self.remoteFiles[newVersion.id], true, ['history', 'modifiedOn'])) {
+              if (newVersion.content !== oldVersion.content ||
+                newVersion.title !== oldVersion.title) {
+                self.saveCurrentfile();
+              }
+            }
+          } else {
+            if (newVersion.content !== oldVersion.content ||
+              newVersion.title !== oldVersion.title) {
+              self.saveCurrentfile();
+            }
+          }
+
+        }
       }
     };
 
-
-
-    // $rootScope.$watch(function () {
-    //   if (!angular.equals({}, firebaseService.files)) {
-    //     return firebaseService.files;
-    //   } else {
-    //     return null;
-    //   }
-    // }, function (updatedFiles) {
-    //   if (updatedFiles) {
-    //     fileService.updateFilesOnRemoteChange(updatedFiles);
-    //   }
-    // }, true);
 
     return fileService;
   }]);
