@@ -28,7 +28,7 @@ angular.module('panels')
           if (value.match(/firebase:authUser.*/)) {
             firebaseStored = true;
           }
-        })
+        });
         return firebaseStored;
       },
 
@@ -111,7 +111,6 @@ angular.module('panels')
         });
       }
     };
-
 
     return firebaseService;
   }]);

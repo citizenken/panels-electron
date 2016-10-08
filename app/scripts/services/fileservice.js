@@ -8,9 +8,9 @@
  * Factory in the panels.
  */
 angular.module('panels')
-  .factory('fileService', ['utilityService', 'localFileService', 'remoteFileService', 
+  .factory('fileService', ['utilityService', 'localFileService', 'remoteFileService',
     'lodash', '$q', 'firebaseService', '$timeout', 'scriptService',
-    function (utilityService, localFileService, remoteFileService, 
+    function (utilityService, localFileService, remoteFileService,
       lodash, $q, firebaseService, $timeout, scriptService) {
 
     var fileService = {
@@ -152,7 +152,7 @@ angular.module('panels')
       },
 
       saveCurrentfile: function () {
-        var self = this
+        var self = this;
         if (self.typeDelayTimer) {
           $timeout.cancel(self.typeDelayTimer);
         }
@@ -165,7 +165,7 @@ angular.module('panels')
             self.saved = false;
           }, 1000);
         }, 100);
-      },    
+      },
 
       saveOnChange: function (newVersion, oldVersion) {
         var self = this;

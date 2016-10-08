@@ -70,6 +70,11 @@ angular.module('panels')
         self.unwatch = firebaseService.files[self.id].$watch(function () {
           self.syncRemoteToLocal();
         });
+        self.update();
+      } else if (self.sync) {
+        firebaseService.createFileRef(self).then(function () {
+          console.log(firebaseService.loadUserFiles(firebaseService.userRef));
+        });
       }
     };
 
@@ -77,7 +82,6 @@ angular.module('panels')
       var self = this;
       self.sync = true;
       self.setWatch();
-      self.update();
     };
 
     var save = function (sync) {

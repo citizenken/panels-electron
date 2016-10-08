@@ -35,13 +35,6 @@ angular
       console.log('foo');
     }
   }])
-  .run(['fileService', 'scriptService', function (fileService, scriptService) {
-    fileService.loadFiles();
-    fileService.setCurrentFile();
-    if (fileService.currentFile) {
-        scriptService.createScript(fileService.currentFile);
-    }
-  }])
   .run(['hintService', function (hintService) {
     window.CodeMirror.registerHelper('hint', 'script', function(cm) {
       var cursorHead = cm.getCursor(),

@@ -51,13 +51,15 @@ angular.module('panels')
     }
 
     function loadFiles () {
+      fileService.loadFiles();
+      fileService.setCurrentFile();
       if (!fileService.currentFile) {
         fileService.create(ctrl.scriptType);
         fileService.setCurrentFile();
         scriptService.createScript(fileService.currentFile);
       }
       ctrl.setControllerFiles();
-      scriptService.parseCurrentFile(fileService.currentFile);      
+      scriptService.parseCurrentFile(fileService.currentFile);
     }
 
     function setControllerFiles () {
@@ -118,4 +120,12 @@ angular.module('panels')
     }, fileService.saveOnChange.bind(fileService), true, $scope);
 
     watcherService.enable($scope, 'currentFileUpdate');
+
+    watcherService.create('showSaveStatus', function () {
+      return fileService.saved;
+    }, function (saved) {
+      ctrl.saved = saved;
+    });
+
+    watcherService.enable($scope, 'showSaveStatus');
   }]);
