@@ -8,8 +8,8 @@
  * Factory in the panels.
  */
 angular.module('panels')
-  .factory('LocalFile', ['File', 'firebaseService', 'lodash', '$q', 'watcherService',
-    function (File, firebaseService, lodash, $q, watcherService) {
+  .factory('LocalFile', ['File', 'firebaseService', 'lodash', '$q', 'watcherService', 'codemirrorService',
+    function (File, firebaseService, lodash, $q, watcherService, codemirrorService) {
     var filePrefix = 'panelsFile_';
 
     var syncFiles = function (remoteFile) {
@@ -36,6 +36,12 @@ angular.module('panels')
           angular.forEach(toCopy, function (value) {
             self[value] = remoteFile[value];
           });
+
+          if (self.cursor) {
+            codemirrorService.editor.focus();
+            codemirrorService.editor.setCursor(self.cursor);
+            codemirrorService.editor.refresh();
+          }
           self.update(oldVersion, false);
           watcherService.enable(null, 'currentFileUpdate');
         }
@@ -100,6 +106,8 @@ angular.module('panels')
           !lodash.isFunction(value) &&
           value !== file2[key]) {
             if (lodash.isArray(value) && !lodash.isEmpty(value)) {
+              differences.push(key);
+            } else if (lodash.isObject(value) && lodash.keys(value).length > 0) {
               differences.push(key);
             } else if (lodash.isString(value)) {
               differences.push(key);

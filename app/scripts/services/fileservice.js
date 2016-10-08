@@ -74,9 +74,6 @@ angular.module('panels')
 
       updateCurrentFile: function () {
         this.currentFile.update(this.lastSave);
-        // if (this.currentFile.sync) {
-        //   this.remoteFiles[this.currentFile.id].update(this.currentFile);
-        // }
         this.lastSave = angular.copy(this.currentFile);
       },
 
@@ -88,8 +85,6 @@ angular.module('panels')
       },
 
       compareFiles: function (file1, file2, deleteFunctions, excludeKeys) {
-        // var copy1 = angular.copy(file1),
-        // copy2 = angular.copy(file2);
         var differences = [];
         angular.forEach(file1, function (value, key) {
           if (excludeKeys.indexOf(key) === -1 &&
@@ -99,41 +94,9 @@ angular.module('panels')
           }
         });
 
-        // angular.forEach(copy1, function (value, key) {
-        //   if (typeof value === 'function') {
-        //     delete copy1[key];
-        //   }
-        // });
-
-        // angular.forEach(copy2, function (value, key) {
-        //   if (typeof value === 'function') {
-        //     delete copy2[key];
-        //   }
-        // });
-
-        // angular.forEach(copy1, function (value, key) {
-        //   if ()
-        // });
-
         return (!angular.equals([], differences)) ? differences : null;
       },
 
-      // updateFilesOnRemoteChange: function (updatedFiles) {
-      //   var self = this,
-      //   id = self.currentFile.id,
-      //   remoteFirebaseFile = remoteFileService.create(updatedFiles[id]);
-
-      //   // compare firebase version to local and remote files
-      //   if (!self.compareFiles(self.currentFile, remoteFirebaseFile, true, ['history', 'modifiedOn']) &&
-      //     self.remoteFiles &&
-      //     lodash.has(self.remoteFiles, id) &&
-      //     !self.compareFiles(remoteFirebaseFile, self.remoteFiles[id], true, ['history', 'modifiedOn'])) {
-      //       self.remoteFiles[id].syncFileWithRemote()
-      //       .then(function () {
-      //         self.syncLocalAndRemote(self.files[id], self.remoteFiles[id]);
-      //       });
-      //   }
-      // }
       loadFromRemote: function (files) {
         var self = this;
         angular.forEach(files, function (value) {

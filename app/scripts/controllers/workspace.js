@@ -9,9 +9,9 @@
  */
 angular.module('panels')
   .controller('WorkspaceCtrl', ['$scope', '$rootScope', '$timeout', 'fileService', 'scriptService',
-    'firebaseService', 'watcherService', 'lodash', 'onlineService',
+    'firebaseService', 'watcherService', 'lodash', 'onlineService', 'codemirrorService',
     function ($scope, $rootScope, $timeout, fileService, scriptService,
-      firebaseService, watcherService, lodash, onlineService) {
+      firebaseService, watcherService, lodash, onlineService, codemirrorService) {
     var ctrl = this;
     ctrl.editorOptions = {
         lineWrapping : true,
@@ -89,14 +89,13 @@ angular.module('panels')
     }
 
     function codemirrorLoaded (editor) {
-      ctrl.editor = editor;
-      editor.focus();
-      console.log(editor);
+      codemirrorService.editor = editor;
+      codemirrorService.editor.focus();
     }
 
     function focusPage () {
       if (ctrl.editor) {
-        ctrl.editor.focus();
+        codemirrorService.editor.focus();
       }
     }
 
