@@ -43,6 +43,7 @@ angular.module('panels')
 
       setFile: function (fileId) {
         this.currentFile = this.files[fileId];
+        firebaseService.setUserCurrentFile(fileId);
       },
 
       setSync: function (fileId) {
@@ -81,6 +82,7 @@ angular.module('panels')
         if (!angular.equals({}, this.files)) {
           var lastModified = lodash.orderBy(lodash.toArray(this.files), 'modifiedOn', 'desc')[0];
           this.currentFile = lastModified;
+          firebaseService.setUserCurrentFile(this.currentFile.id);
         }
       },
 

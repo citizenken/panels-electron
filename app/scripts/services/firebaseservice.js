@@ -8,8 +8,10 @@
  * Factory in the panelsElectronApp.
  */
 angular.module('panels')
-  .factory('firebaseService', ['$window', 'oauthService', '$firebaseAuth', '$firebaseObject', '$q', 'utilityService',
-    function ($window, oauthService, $firebaseAuth, $firebaseObject, $q, utilityService) {
+  .factory('firebaseService', ['$window', 'oauthService', '$firebaseAuth', '$firebaseObject',
+    '$q', 'utilityService', 'lodash', '$rootScope',
+    function ($window, oauthService, $firebaseAuth, $firebaseObject,
+      $q, utilityService, lodash, $rootScope) {
     var rootRef = $window.firebase.database();
 
     var firebaseService = {
@@ -19,6 +21,7 @@ angular.module('panels')
       firebaseUser: null,
       userRef: null,
       files: {},
+      userObjects: {},
 
       hasFirebaseAuthStored: function () {
         var keys = utilityService.getLocalStorageKeys(),
@@ -109,7 +112,46 @@ angular.module('panels')
         .then(function (data) {
           return $firebaseObject(data).$loaded();
         });
+      },
+
+      loadUsers: function () {
+        var self = this;
+
+        $firebaseObject(self.users)
+        .$loaded(function (data) {
+          angular.forEach(data, function (value, key) {
+            if (key.indexOf('$') === -1) {
+              var userObj = $firebaseObject(self.users.child(key));
+              userObj.$watch(self.onUserChange);
+              self.userObjects[key] = userObj;
+            }
+          });
+        });
+        return $q.resolve();
+      },
+
+      onUserChange: function (event) {
+        $rootScope.$emit('userChange', event.key);
+      },
+
+      setUserCurrentFile: function (fileId) {
+        var self = this;
+        if (lodash.has(self.files, fileId) && firebaseService.userRef) {
+          self.userRef.currentFile = fileId;
+          self.userRef.$save()
+          .then(function () {
+            console.log('updated current file');
+          });
+        }
+      },
+
+      setUserCurrentCurrorPos: function (cursor) {
+        var self = this;
+        self.userRef.currentCursorPosition = cursor;
+        self.userRef.$save();
       }
+
+
     };
 
     return firebaseService;

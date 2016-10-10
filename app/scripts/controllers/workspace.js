@@ -44,6 +44,7 @@ angular.module('panels')
       if (onlineService.online && firebaseService.hasFirebaseAuthStored()) {
         firebaseService.signIn()
         .then(fileService.loadFromRemote.bind(fileService))
+        .then(firebaseService.loadUsers.bind(firebaseService))
         .then(ctrl.loadFiles);
       } else {
         ctrl.loadFiles();
@@ -90,11 +91,12 @@ angular.module('panels')
 
     function codemirrorLoaded (editor) {
       codemirrorService.editor = editor;
+      codemirrorService.registerListeners();
       codemirrorService.editor.focus();
     }
 
     function focusPage () {
-      if (ctrl.editor) {
+      if (codemirrorService.editor) {
         codemirrorService.editor.focus();
       }
     }

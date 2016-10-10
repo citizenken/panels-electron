@@ -8,8 +8,8 @@
  * Factory in the panels.
  */
 angular.module('panels')
-  .factory('File', ['utilityService', 'codemirrorService', 'firebaseService',
-    function (utilityService, codemirrorService, firebaseService) {
+  .factory('File', ['utilityService',
+    function (utilityService) {
     // Public API here
     return function File (scriptType) {
       this.id = utilityService.generateRandomId(20);
@@ -28,9 +28,6 @@ angular.module('panels')
       this.update = function (oldVersion, sync) {
         this.addHistory(oldVersion);
         this.modifiedOn = Date.now();
-        if (firebaseService.userRef) {
-          this.cursor = codemirrorService.editor.getCursor();
-        }
         this.save(sync);
       };
 
