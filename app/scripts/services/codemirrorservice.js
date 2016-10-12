@@ -13,6 +13,7 @@ angular.module('panels')
     var codemirrorService = {
       editor: null,
       cursors: {},
+      skipCursorUpdate: false,
 
       focusEndOfText: function () {
         var self = this,
@@ -27,6 +28,17 @@ angular.module('panels')
       registerListeners: function () {
         var self = this;
         self.editor.on('cursorActivity', self.updateCursorLocation.bind(self));
+        self.editor.on('blur', function () {
+          self.skipCursorUpdate = true;
+        });
+        self.editor.on('focus', function () {
+          self.skipCursorUpdate = false;
+          if (firebaseService.userRef &&
+            firebaseService.userRef.currentFile === fileService.currentFile.id &&
+            lodash.has(firebaseService.userRef, 'currentCursorPosition')) {
+              self.editor.setCursor(firebaseService.userRef.currentCursorPosition);
+          }
+        });
         self.editor.on('change', function () {
           // When the doc changes, if there are cursors but no marks on the doc, set the marks
           if (self.editor.getAllMarks().length !== lodash.toArray(self.cursors).length) {
@@ -55,8 +67,15 @@ angular.module('panels')
 
       updateCursorLocation: function () {
         var self = this;
+        // TODO: fix this cluge. The "cursorActivity" event fires when a change is made to the editor content. The editor can
+        // get in a weird state where it still has focus according to hasFocus(), but no cursor is blinking. The cursor has
+        // been reset to the begining of the doc, 0,0. This will prevent that position from being saved. This means that
+        // a collaborator cursor will never (maybe) be shown at 0,0, since that position is never saved when the user is at it
+        // (it could potentially be shown if one user forces a collab cursor to be a 0,0, ex. if a user deletes a doc, triggering
+        // updateCollabCursorLocation)
         if (firebaseService.userRef &&
-          fileService.currentFile.id === firebaseService.userRef.currentFile) {
+          fileService.currentFile.id === firebaseService.userRef.currentFile &&
+          !self.skipCursorUpdate) {
           firebaseService.setUserCurrentCurrorPos(self.editor.getCursor());
         }
       },
@@ -83,7 +102,6 @@ angular.module('panels')
         if (lodash.has(firebaseService.userObjects, userId) &&
               firebaseService.userRef.id !== userId &&
               firebaseService.userObjects[userId].currentFile === fileService.currentFile.id) {
-
               var cursorColor = utilityService.getRandomColor();
               if (lodash.has(self.cursors, userId)) {
                 cursorColor = self.cursors[userId].color;
