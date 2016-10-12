@@ -43,6 +43,7 @@ angular.module('panels')
 
       setFile: function (fileId) {
         this.currentFile = this.files[fileId];
+        this.currentFile.setWatch();
         firebaseService.setUserCurrentFile(fileId);
       },
 
@@ -99,7 +100,7 @@ angular.module('panels')
         return (!angular.equals([], differences)) ? differences : null;
       },
 
-      loadFromRemote: function (files) {
+      loadFromRemote: function () {
         var self = this;
         angular.forEach(firebaseService.files, function (value) {
           value.$loaded()

@@ -39,12 +39,12 @@ angular.module('panels')
 
         authWindow.loadURL(authUrl);
         authWindow.once('ready-to-show', function () {
-          authWindow.show();
+          try {
+            authWindow.show();
+          } catch (err) {
+            console.log('caught show error', err);
+          }
         });
-
-        // authWindow.webContents.on('will-navigate', function (event, url) {
-        //   deferred.resolve(self.handleGoogleCallback(url));
-        // });
 
         authWindow.webContents.on('did-get-redirect-request', function (event, oldUrl, newUrl) {
           if (newUrl.indexOf(requestOptions.redirect_uri) === 0) {

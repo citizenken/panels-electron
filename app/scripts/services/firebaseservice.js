@@ -22,6 +22,7 @@ angular.module('panels')
       userRef: null,
       files: {},
       userObjects: {},
+      collabFiles: {},
 
       hasFirebaseAuthStored: function () {
         var keys = utilityService.getLocalStorageKeys(),
@@ -76,6 +77,12 @@ angular.module('panels')
           files[key] = self.getRemoteFile(key);
         });
         self.files = files;
+
+        if (lodash.has(userRef, 'collaborator')) {
+          angular.forEach(userRef.collaborator, function (value, key) {
+            files[key] = self.getRemoteFile(key);
+          });
+        }
 
         return files;
       },

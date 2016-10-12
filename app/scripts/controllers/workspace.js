@@ -66,13 +66,16 @@ angular.module('panels')
     function setControllerFiles () {
       ctrl.workingFile = fileService.currentFile;
       ctrl.files = fileService.files;
-      codemirrorService.editor.focus();
-      codemirrorService.showAllUserCursors();
+      if (firebaseService.userRef !== null) {
+        codemirrorService.showAllUserCursors();
+      }
     }
 
     function signIn () {
       firebaseService.signIn()
-      .then(fileService.loadFromRemote.bind(fileService));
+      .then(fileService.loadFromRemote.bind(fileService))
+      .then(firebaseService.loadUsers.bind(firebaseService))
+      .then(ctrl.loadFiles);
     }
 
     function syncFile () {
