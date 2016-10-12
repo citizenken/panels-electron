@@ -41,6 +41,7 @@ angular.module('panels')
     ctrl.loadFiles = loadFiles;
 
     function init () {
+      fileService.loadFiles();
       if (onlineService.online && firebaseService.hasFirebaseAuthStored()) {
         firebaseService.signIn()
         .then(fileService.loadFromRemote.bind(fileService))
@@ -52,7 +53,6 @@ angular.module('panels')
     }
 
     function loadFiles () {
-      fileService.loadFiles();
       fileService.setCurrentFile();
       if (!fileService.currentFile) {
         fileService.create(ctrl.scriptType);
@@ -66,6 +66,8 @@ angular.module('panels')
     function setControllerFiles () {
       ctrl.workingFile = fileService.currentFile;
       ctrl.files = fileService.files;
+      codemirrorService.editor.focus();
+      codemirrorService.showAllUserCursors();
     }
 
     function signIn () {
@@ -92,7 +94,6 @@ angular.module('panels')
     function codemirrorLoaded (editor) {
       codemirrorService.editor = editor;
       codemirrorService.registerListeners();
-      codemirrorService.editor.focus();
     }
 
     function focusPage () {

@@ -117,7 +117,7 @@ angular.module('panels')
       loadUsers: function () {
         var self = this;
 
-        $firebaseObject(self.users)
+        return $firebaseObject(self.users)
         .$loaded(function (data) {
           angular.forEach(data, function (value, key) {
             if (key.indexOf('$') === -1) {
@@ -126,8 +126,8 @@ angular.module('panels')
               self.userObjects[key] = userObj;
             }
           });
+          return $q.resolve();
         });
-        return $q.resolve();
       },
 
       onUserChange: function (event) {
@@ -138,20 +138,20 @@ angular.module('panels')
         var self = this;
         if (lodash.has(self.files, fileId) && firebaseService.userRef) {
           self.userRef.currentFile = fileId;
-          self.userRef.$save()
-          .then(function () {
-            console.log('updated current file');
-          });
+          return self.userRef.$save();
         }
       },
 
-      setUserCurrentCurrorPos: function (cursor) {
+      setUserCurrentCurrorPos: function (cursor, userId) {
         var self = this;
-        self.userRef.currentCursorPosition = cursor;
-        self.userRef.$save();
+        if (!userId) {
+          self.userRef.currentCursorPosition = cursor;
+          self.userRef.$save();
+        } else {
+          self.userObjects[userId].currentCursorPosition = cursor;
+          self.userObjects[userId].$save();
+        }
       }
-
-
     };
 
     return firebaseService;

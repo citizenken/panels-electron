@@ -101,7 +101,7 @@ angular.module('panels')
 
       loadFromRemote: function (files) {
         var self = this;
-        angular.forEach(files, function (value) {
+        angular.forEach(firebaseService.files, function (value) {
           value.$loaded()
           .then(function () {
             if (!lodash.has(self.files, value.id)) {
@@ -111,6 +111,7 @@ angular.module('panels')
               });
             } else {
               self.files[value.id].syncFiles(value);
+              self.files[value.id].setWatch();
             }
           });
         });
