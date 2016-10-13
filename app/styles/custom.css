@@ -8,7 +8,8 @@
   border-style: none;
   border-radius: 0;
   border-bottom: medium solid #ff0000;
-  font-size:18px;
+  font-size: 36px;
+  font-weight: bold;
 }
 
 .title-input::-webkit-input-placeholder {
@@ -76,4 +77,20 @@
   font-size: 0px;
   border-left: 2px solid;
   height: 22px;
+}
+
+snap-content {
+  background-color: #eee;
+}
+
+html, body, .view, snap-content {
+  height: 100%;
+}
+
+
+.open-sidebar {
+  position: absolute;
+  z-index: 50;
+  height: 100%;
+  background-color: lightblue;
 }

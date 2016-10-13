@@ -23,6 +23,7 @@ angular.module('panels')
       type: 'comic',
       content: null
     };
+    ctrl.user = null;
     ctrl.scriptType = 'comicbook';
     ctrl.init = init;
     ctrl.createFile = createFile;
@@ -39,11 +40,16 @@ angular.module('panels')
     ctrl.setControllerFiles = setControllerFiles;
     ctrl.changeFile = changeFile;
     ctrl.loadFiles = loadFiles;
+    ctrl.doBlur = doBlur;
+
 
     function init () {
       fileService.loadFiles();
       if (onlineService.online && firebaseService.hasFirebaseAuthStored()) {
         firebaseService.signIn()
+        .then(function (user) {
+          ctrl.user = user;
+        })
         .then(fileService.loadFromRemote.bind(fileService))
         .then(firebaseService.loadUsers.bind(firebaseService))
         .then(ctrl.loadFiles);
@@ -76,6 +82,10 @@ angular.module('panels')
       .then(fileService.loadFromRemote.bind(fileService))
       .then(firebaseService.loadUsers.bind(firebaseService))
       .then(ctrl.loadFiles);
+    }
+
+    function doBlur ($event) {
+      $event.target.blur();
     }
 
     function syncFile () {

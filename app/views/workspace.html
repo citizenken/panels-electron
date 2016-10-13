@@ -3,20 +3,22 @@
 </snap-drawer>
 
 <snap-content class="hide-snap-overflow">
-  <nav class="navbar navbar-default no-bottom-margin">
+  <div class="open-sidebar" scroll-element><i class="block glyphicon glyphicon-triangle-right"></i></div>
+  <div class="page-header no-bottom-margin">
+    <div class="form-group">
+        <input type="text" class="form-control title-input" placeholder="Untitled {{ workspace.workingFile.type }}"
+        pu-elastic-input pu-elastic-input-minwidth="500px" pu-elastic-input-maxwidth="1000px" ng-model="workspace.workingFile.title"
+        ui-keypress="{13:'workspace.doBlur($event)'}">
+    </div>
+  </div>
+<!--   <nav class="navbar navbar-default no-bottom-margin">
     <div id="navbar" class="collapse navbar-collapse">
       <button snap-toggle="left" class="btn btn-default navbar-btn menu-btn" aria-label="Menu">
         <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
       </button>
-      <form class="navbar-form navbar-left" role="search">
-        <div class="form-group">
-            <input type="text" class="form-control title-input" placeholder="Untitled {{ workspace.workingFile.type }}"
-            pu-elastic-input pu-elastic-input-minwidth="200px" pu-elastic-input-maxwidth="1000px" ng-model="workspace.workingFile.title">
-        </div>
-      </form>
       <p class="navbar-text"><i ng-show="workspace.saved" class="block glyphicon glyphicon-floppy-saved"></i></p>
-    </div><!--/.nav-collapse -->
-  </nav>
+    </div>
+  </nav> -->
   <button ng-click="workspace.signIn()">Login</button>
   <button ng-click="workspace.syncFile()">Sync</button>
   <button ng-click="workspace.createFile()">Create</button>
@@ -26,7 +28,7 @@
         <div ui-codemirror="{ onLoad : workspace.codemirrorLoaded }" ui-codemirror-opts="workspace.editorOptions" ng-model="workspace.workingFile.content" ui-refresh="true" ng-show="workspace.tab == 'edit'" ></div>
         <panels-preview ng-show="workspace.tab == 'preview'" script-type="{{ workspace.file.type }}"></panels-preview>
       </div>
-      <div class="col-md-1 affix-top page-adjacent">
+      <div class="col-md-1 affix-top page-adjacent" scroll-element scroll-anchor="top">
         <ul class="nav nav-tabs tabs-right">
           <li class="active">
             <a class="text-center" data-toggle="tab" ng-click="workspace.changeTab('edit')">

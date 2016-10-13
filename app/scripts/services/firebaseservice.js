@@ -53,7 +53,9 @@ angular.module('panels')
         })
         .then(this.getUserRecord.bind(this))
         .then(this.loadUserFiles.bind(this))
-        // .then(this.synchUserFiles.bind(this))
+        .then(function () {
+          return $q.resolve(self.userRef);
+        })
         .catch(function (error) {
           console.log(error);
         });
