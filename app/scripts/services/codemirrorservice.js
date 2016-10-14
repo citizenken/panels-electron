@@ -28,37 +28,48 @@ angular.module('panels')
       registerListeners: function () {
         var self = this;
         self.editor.on('cursorActivity', self.updateCursorLocation.bind(self));
-        self.editor.on('blur', function () {
-          self.skipCursorUpdate = true;
-        });
-        self.editor.on('focus', function () {
-          self.skipCursorUpdate = false;
-          if (firebaseService.userRef &&
-            firebaseService.userRef.currentFile === fileService.currentFile.id &&
-            lodash.has(firebaseService.userRef, 'currentCursorPosition')) {
-              self.editor.setCursor(firebaseService.userRef.currentCursorPosition);
-          }
-        });
-        self.editor.on('change', function () {
-          // When the doc changes, if there are cursors but no marks on the doc, set the marks
-          if (self.editor.getAllMarks().length !== lodash.toArray(self.cursors).length) {
-            self.showAllUserCursors();
-          }
+        self.editor.on('blur', self.handleBlur.bind(self));
+        self.editor.on('focus', self.handleFocus.bind(self));
+        self.editor.on('change', self.handleChange.bind(self));
+      },
 
-          // If there are any marks, check if the mark is different from what the remote position is. If it is,
-          // update the remote
-          if (self.editor.getAllMarks().length > 0) {
-            angular.forEach(self.cursors, function (value, key) {
-              if (value.remotePosition &&
-                  value.cursor !== null &&
-                  !angular.equals(value.remotePosition, value.cursor.find())) {
-                var newPosition = value.cursor.find();
-                value.remotePosition = newPosition;
-                self.updateCollabCursorLocation(newPosition, key);
-              }
-            });
-          }
-        });
+      handleBlur: function () {
+        var self = this;
+        self.skipCursorUpdate = true;
+      },
+
+      handleFocus: function () {
+        var self = this;
+
+        $rootScope.$emit('onFocus');
+        self.skipCursorUpdate = false;
+        if (firebaseService.userRef &&
+          firebaseService.userRef.currentFile === fileService.currentFile.id &&
+          lodash.has(firebaseService.userRef, 'currentCursorPosition')) {
+            self.editor.setCursor(firebaseService.userRef.currentCursorPosition);
+        }
+      },
+
+      handleChange: function () {
+        var self = this;
+        // When the doc changes, if there are cursors but no marks on the doc, set the marks
+        if (self.editor.getAllMarks().length !== lodash.toArray(self.cursors).length) {
+          self.showAllUserCursors();
+        }
+
+        // If there are any marks, check if the mark is different from what the remote position is. If it is,
+        // update the remote
+        if (self.editor.getAllMarks().length > 0) {
+          angular.forEach(self.cursors, function (value, key) {
+            if (value.remotePosition &&
+                value.cursor !== null &&
+                !angular.equals(value.remotePosition, value.cursor.find())) {
+              var newPosition = value.cursor.find();
+              value.remotePosition = newPosition;
+              self.updateCollabCursorLocation(newPosition, key);
+            }
+          });
+        }
       },
 
       updateCollabCursorLocation: function (markPos, userId) {

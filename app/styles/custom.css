@@ -83,14 +83,38 @@ snap-content {
   background-color: #eee;
 }
 
-html, body, .view, snap-content {
-  height: 100%;
+snap-drawer {
+  border-right: medium solid darkgray;
 }
-
 
 .open-sidebar {
   position: absolute;
   z-index: 50;
   height: 100%;
-  background-color: lightblue;
+  /*background-color: lightblue;*/
+}
+
+.open-sidebar div, .sidebar-icon {
+  position: relative;
+  z-index: 50;
+}
+
+.sidebar-icon {
+  top: 42px;
+}
+
+.open-sidebar-button {
+  height: 100px;
+  background-color: darkgray;
+  top: 38%;
+  border-radius: 0px 25px 25px 0px;
+}
+
+.title-header {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.saved {
+  color: green;
 }

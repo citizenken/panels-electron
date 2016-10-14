@@ -41,6 +41,7 @@ angular.module('panels')
     ctrl.changeFile = changeFile;
     ctrl.loadFiles = loadFiles;
     ctrl.doBlur = doBlur;
+    ctrl.snapState = 'closed';
 
 
     function init () {
@@ -119,6 +120,7 @@ angular.module('panels')
       ctrl.tab = tab;
     }
 
+
     ctrl.init();
 
 
@@ -143,4 +145,10 @@ angular.module('panels')
     });
 
     watcherService.enable($scope, 'showSaveStatus');
+
+    $rootScope.$on('snapEvent', function (e, d) {
+      ctrl.snapState = d;
+      $scope.$apply();
+      console.log(ctrl.snapState);
+    })
   }]);
