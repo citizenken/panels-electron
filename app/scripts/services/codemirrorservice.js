@@ -7,6 +7,9 @@
  * # codemirrorService
  * Factory in the panelsElectronApp.
  */
+
+var tinycolor = require("tinycolor2");
+
 angular.module('panels')
   .factory('codemirrorService', ['firebaseService', 'fileService', '$rootScope', 'lodash', 'utilityService',
     function (firebaseService, fileService, $rootScope, lodash, utilityService) {
@@ -78,12 +81,6 @@ angular.module('panels')
 
       updateCursorLocation: function () {
         var self = this;
-        // TODO: fix this cluge. The "cursorActivity" event fires when a change is made to the editor content. The editor can
-        // get in a weird state where it still has focus according to hasFocus(), but no cursor is blinking. The cursor has
-        // been reset to the begining of the doc, 0,0. This will prevent that position from being saved. This means that
-        // a collaborator cursor will never (maybe) be shown at 0,0, since that position is never saved when the user is at it
-        // (it could potentially be shown if one user forces a collab cursor to be a 0,0, ex. if a user deletes a doc, triggering
-        // updateCollabCursorLocation)
         if (firebaseService.userRef &&
           fileService.currentFile.id === firebaseService.userRef.currentFile &&
           !self.skipCursorUpdate) {
@@ -121,22 +118,52 @@ angular.module('panels')
                 }
               }
 
-              var cursorContainer = document.createElement('div');
-              var cursor = document.createElement('div');
+              var cursorContainer = angular.element('<div></div>')
+              .addClass('collab-cursor');
+              
+              var cursor = angular.element('<div></div>')
+              .addClass('cursor')
+              .css('border-color', cursorColor);
+              
+              var cursorImage = null;
+              if (lodash.has(firebaseService.userObjects[userId], 'photoURL')) {
+                cursorImage = angular.element('<img></img>')
+                .attr('src', firebaseService.userObjects[userId].photoURL);
+              } else {
+                var initials = firebaseService.userObjects[userId].displayName
+                .match(/(^[a-zA-Z]{1}| [a-zA-Z]{1})/g)
+                .join('')
+                .replace(' ', '');
+                
+                cursorImage = angular.element('<div></div>')
+                .text(initials.toUpperCase());
+              }
 
-              cursorContainer.className = 'collab-cursor';
-              cursor.className = 'cursor';
-              cursor.style = 'border-color:' + cursorColor;
-              cursorContainer.appendChild(cursor);
+              cursorImage.addClass("cursor-name")
+              .css('background-color', cursorColor);            
+
+              if (tinycolor(cursorColor).isLight()) {
+                cursorImage.css('color', 'black');
+              }
+              
+              cursorContainer.append(cursor);
 
               self.cursors[userId] = {
                 color: cursorColor,
                 remotePosition: firebaseService.userObjects[userId].currentCursorPosition,
                 cursor: null
               };
+
               var bookmark = self.editor.setBookmark(firebaseService.userObjects[userId].currentCursorPosition,
-                {widget: cursorContainer}); // Triggers a change event
+                {widget: cursorContainer.get(0)}); // Triggers a change event
               self.cursors[userId].cursor = bookmark;
+
+              var cursorCssPos = self.editor.cursorCoords(firebaseService.userObjects[userId].currentCursorPosition, 'window');
+              
+              cursorImage
+              .css('top', cursorCssPos.top - 50)
+              .css('left', cursorCssPos.left - 25);
+              cursorContainer.append(cursorImage);
         }
       }
     };

@@ -118,3 +118,41 @@ snap-drawer {
 .saved {
   color: green;
 }
+
+.cursor-name {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: inline-block;
+  position: fixed;
+  font-size: 10px;
+  color: #fff;
+  padding: 2px;
+  white-space: nowrap;
+  display: inline-block;
+  opacity: 0;
+  text-align: center;
+  font-size: 34px; 
+}
+
+.collab-cursor:hover .cursor-name {
+  opacity: 1;
+}
+
+/*.fade-out {
+  opacity: 1;
+  -webkit-animation: fadeOut 2s forwards;
+  animation: fadeOut 2s;
+  -webkit-animation-delay: 2s forwards;
+  animation-delay: 2s; 
+}
+
+@-webkit-keyframes fadeOut {
+    from {opacity: 1;}
+    to {opacity: 0;}
+}
+
+@keyframes fadeOut {
+    from {opacity: 1;}
+    to {opacity: 0;}
+}*/
