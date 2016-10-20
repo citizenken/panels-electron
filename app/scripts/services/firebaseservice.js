@@ -15,6 +15,7 @@ angular.module('panels')
     var rootRef = $window.firebase.database();
 
     var firebaseService = {
+      firebaseObjects: [], // Storage for destruction on logout
       auth: $firebaseAuth(),
       users: rootRef.ref('users'),
       fileRoot: rootRef.ref('files'),
@@ -42,7 +43,7 @@ angular.module('panels')
           provider = 'google';
         }
 
-        return oauthService.googleOauth()
+        return oauthService.googleOauth(self.hasFirebaseAuthStored())
         .then(function (token) {
           var credential = window.firebase.auth.GoogleAuthProvider.credential(token);
           return self.auth.$signInWithCredential(credential);
@@ -64,6 +65,7 @@ angular.module('panels')
       getUserRecord: function (firebaseUser) {
         var self = this,
             userRef = $firebaseObject(self.users.child(firebaseUser.uid));
+        self.firebaseObjects.push(userRef);
         self.userRef = userRef;
         return userRef.$loaded();
       },
@@ -90,14 +92,17 @@ angular.module('panels')
       },
 
       getRemoteFile: function (fileId) {
-        var self = this;
-        return $firebaseObject(self.fileRoot.child(fileId));
+        var self = this,
+        remoteObj = $firebaseObject(self.fileRoot.child(fileId));
+        self.firebaseObjects.push(remoteObj);
+        return remoteObj;
       },
 
       createFileRef: function (file) {
         var self = this,
         newRef = $firebaseObject(self.fileRoot.child(file.id));
         self.files[file.id] = newRef;
+        self.firebaseObjects.push(newRef);
         return newRef.$loaded(function (data) {
           if (data.$value === null) {
             angular.forEach(file, function (value, key) {
@@ -124,15 +129,18 @@ angular.module('panels')
       },
 
       loadUsers: function () {
-        var self = this;
+        var self = this,
+        users =  $firebaseObject(self.users);
+        self.firebaseObjects.push(users);
 
-        return $firebaseObject(self.users)
+        users
         .$loaded(function (data) {
           angular.forEach(data, function (value, key) {
             if (key.indexOf('$') === -1) {
               var userObj = $firebaseObject(self.users.child(key));
               userObj.$watch(self.onUserChange);
               self.userObjects[key] = userObj;
+              self.firebaseObjects.push(userObj);
             }
           });
           return $q.resolve();
@@ -162,6 +170,14 @@ angular.module('panels')
         }
       }
     };
+
+    firebaseService.auth.$onAuthStateChanged(function(firebaseUser) {
+      if (!firebaseUser && firebaseService.firebaseObjects) {
+        angular.forEach(firebaseService.firebaseObjects, function (value) {
+          value.$destroy();
+        });
+      }
+    });
 
     return firebaseService;
   }]);

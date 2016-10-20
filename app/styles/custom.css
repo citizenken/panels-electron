@@ -119,6 +119,39 @@ snap-drawer {
   color: green;
 }
 
+.grid-row-no-margin .row {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.current-dot {
+  margin-left: 5px;
+  display: inline-block;
+  height: 10px;
+  width: 10px;
+  border-radius: 5px;
+  background-color: goldenrod;
+}
+
+.panel-modifications {
+  margin-top: 0px !important;
+  border-radius: 0px !important;
+}
+
+.profile-container {
+  padding: 5px;
+}
+
+.avatar {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+  height: 50px;
+}
+
+.profile-text {
+  text-align: center;
+}
 .cursor-name {
   width: 50px;
   height: 50px;

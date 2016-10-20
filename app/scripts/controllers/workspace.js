@@ -23,6 +23,8 @@ angular.module('panels')
       type: 'comic',
       content: null
     };
+
+    ctrl.online = true;
     ctrl.user = null;
     ctrl.scriptType = 'comicbook';
     ctrl.init = init;
@@ -34,7 +36,6 @@ angular.module('panels')
     ctrl.changeTab = changeTab;
     ctrl.tab = 'edit';
     ctrl.showNavbar = false;
-    ctrl.signIn = signIn;
     ctrl.syncFile = syncFile;
     ctrl.files = {};
     ctrl.setControllerFiles = setControllerFiles;
@@ -76,13 +77,6 @@ angular.module('panels')
       if (firebaseService.userRef !== null) {
         codemirrorService.showAllUserCursors();
       }
-    }
-
-    function signIn () {
-      firebaseService.signIn()
-      .then(fileService.loadFromRemote.bind(fileService))
-      .then(firebaseService.loadUsers.bind(firebaseService))
-      .then(ctrl.loadFiles);
     }
 
     function doBlur ($event) {
@@ -149,6 +143,7 @@ angular.module('panels')
     $rootScope.$on('snapEvent', function (e, d) {
       ctrl.snapState = d;
       $scope.$apply();
-      console.log(ctrl.snapState);
-    })
+    });
+
+    $rootScope.$on('signedIn', ctrl.loadFiles);
   }]);

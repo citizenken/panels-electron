@@ -1,12 +1,33 @@
 <div ng-controller="SidebarCtrl as sidebar">
-  <div class="grid" ng-if="!sidebar.inspectHistory">
+  <div class="grid grid-row-no-margin" ng-if="!sidebar.inspectHistory">
     <div class="row">
+      <div class="profile-container">
+        <img ng-if="sidebar.user" class="avatar img-responsive img-circle" ng-src="{{ sidebar.user.photoURL }}"></img>
+        <div ng-if="sidebar.user" class="profile-text">
+          <span>{{ sidebar.user.displayName }}</span>
+          <br>
+          <a ng-click="sidebar.signOut()">Sign out</a>
+        </div>
+        <div ng-if="!sidebar.user && workspace.online" class="profile-text">
+          <a ng-click="sidebar.signIn()">Sign in</a>
+        </div>
+        <div ng-if="!sidebar.user && !workspace.online" class="profile-text">
+          <span>No internet connection</span>
+          <br>
+          <span>Working offline</span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="profile-container">
+        <h4>Your files:</h4>
+      </div>
     </div>
     <div class="row">
       <uib-accordion close-others="true">
-        <div uib-accordion-group ng-repeat="file in workspace.files"  class="panel-default">
+        <div uib-accordion-group ng-repeat="file in workspace.files"  class="panel-modifications panel-default">
           <uib-accordion-heading>
-            <p>{{ file.title || 'Untitled ' + file.type }} <span ng-if="file.id == workspace.workingFile.id">Current</span></p>
+            <p>{{ file.title || 'Untitled ' + file.type }}<span class="current-dot" ng-if="file.id == workspace.workingFile.id"></span></p>
           </uib-accordion-heading>
           <ul class="list-inline">
             <li>
@@ -26,7 +47,7 @@
             </li>
           </ul>
           <div ng-show="sidebar.detail == file.id">
-            <p>Sync remotely <input type="checkbox" name="" ng-model="file.sync" ng-click="sidebar.setSync(file.id)"/></p>
+            <p>Sync remote <input type="checkbox" name="" ng-model="file.sync" ng-click="sidebar.setSync(file.id)"/></p>
             <p>Script type: {{ file.type }}</p>
             <p>Created on: {{ file.createdOn | date : 'shortDate' }}</p>
             <p>Last modified:</br>{{ file.modifiedOn | date : 'short' }}</p>

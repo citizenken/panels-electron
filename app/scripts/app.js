@@ -31,11 +31,6 @@ angular
     window.firebase.initializeApp(config);
     snapRemoteProvider.globalOptions.touchToDrag = false;
   }])
-  .run(['firebaseService', function (firebaseService) {
-    if (firebaseService.auth.$getAuth()) {
-      console.log('foo');
-    }
-  }])
   .run(['hintService', function (hintService) {
     window.CodeMirror.registerHelper('hint', 'script', function(cm) {
       var cursorHead = cm.getCursor(),

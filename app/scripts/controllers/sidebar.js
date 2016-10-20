@@ -8,13 +8,17 @@
  * Controller of the panelsElectronApp
  */
 angular.module('panels')
-  .controller('SidebarCtrl', [ 'fileService', function (fileService) {
+  .controller('SidebarCtrl', [ '$rootScope', 'fileService', 'firebaseService',
+    function ($rootScope, fileService, firebaseService) {
     var ctrl = this;
     ctrl.showHistory = showHistory;
     ctrl.inspectHistory = null;
     ctrl.showDetail = showDetail;
     ctrl.detail = null;
     ctrl.setSync = setSync;
+    ctrl.signOut = signOut;
+    ctrl.signIn = signIn;
+    ctrl.user = null;
 
     function showHistory (file) {
       ctrl.inspectHistory  = file;
@@ -22,6 +26,23 @@ angular.module('panels')
 
     function showDetail (fileId) {
       ctrl.detail = (ctrl.detail === fileId) ? null : fileId;
+    }
+
+    function signIn () {
+      firebaseService.signIn()
+      .then(function (user) {
+        ctrl.user = user;
+      })
+      .then(fileService.loadFromRemote.bind(fileService))
+      .then(firebaseService.loadUsers.bind(firebaseService))
+      .then(function () {
+        $rootScope.$emit('signedIn');
+      });
+    }
+
+    function signOut () {
+      ctrl.user = null;
+      firebaseService.auth.$signOut();
     }
 
     function setSync (fileId) {

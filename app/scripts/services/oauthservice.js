@@ -29,7 +29,10 @@ angular.module('panels')
     return {
       authWindow: null,
       accessToken: null,
-      googleOauth: function () {
+      googleOauth: function (promptForAccount) {
+        if (!promptForAccount) {
+          requestOptions.prompt = 'select_account';
+        }
         var self = this;
         var deferred = $q.defer();
         var authWindow = new BrowserWindow({ width: 800, height: 600, show: false, 'node-integration': false }),
