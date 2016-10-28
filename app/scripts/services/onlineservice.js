@@ -12,13 +12,21 @@ angular.module('panels')
     var service = {
       online: null,
       updateOnlineStatus: function () {
+        console.log('foo');
         this.online = navigator.onLine;
-        $rootScope.$emit('onlineStatusChange', service.onLine);
+        $rootScope.$emit('onlineStatusChange', service.online);
+      },
+
+      init: function () {
+        var self = this;
+        self.online = navigator.onLine;
       }
     };
+
+    // service.init();
     service.updateOnlineStatus();
-    $window.addEventListener('online',  service.updateOnlineStatus);
-    $window.addEventListener('offline', service.updateOnlineStatus);
+    window.addEventListener('online',  service.updateOnlineStatus);
+    window.addEventListener('offline', service.updateOnlineStatus);
 
     return service;
   }]);

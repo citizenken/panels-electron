@@ -19,6 +19,8 @@ angular.module('panels')
     ctrl.signOut = signOut;
     ctrl.signIn = signIn;
     ctrl.user = null;
+    ctrl.openAccordion = {};
+    ctrl.users = null;
 
     function showHistory (file) {
       ctrl.inspectHistory  = file;
@@ -34,10 +36,7 @@ angular.module('panels')
         ctrl.user = user;
       })
       .then(fileService.loadFromRemote.bind(fileService))
-      .then(firebaseService.loadUsers.bind(firebaseService))
-      .then(function () {
-        $rootScope.$emit('signedIn');
-      });
+      .then(firebaseService.loadUsers.bind(firebaseService));
     }
 
     function signOut () {
@@ -53,4 +52,12 @@ angular.module('panels')
       }
       console.log(ctrl.detail);
     }
+
+    $rootScope.$on('signedIn', function (e, user) {
+      ctrl.user = user;
+    });
+
+    $rootScope.$on('usersLoaded', function (e, users) {
+      ctrl.users = users;
+    });
   }]);

@@ -19,7 +19,8 @@ angular
     'ngLodash',
     'ui.bootstrap',
     'ui.keypress',
-    'firebase'
+    'firebase',
+    'ui.toggle'
   ])
   .config(['snapRemoteProvider', function (snapRemoteProvider) {
     var config = {

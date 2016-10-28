@@ -83,7 +83,9 @@ angular.module('panels')
         if (!angular.equals({}, this.files)) {
           var lastModified = lodash.orderBy(lodash.toArray(this.files), 'modifiedOn', 'desc')[0];
           this.currentFile = lastModified;
-          firebaseService.setUserCurrentFile(this.currentFile.id);
+          if (!angular.equals({}, firebaseService)) {
+            firebaseService.setUserCurrentFile(this.currentFile.id);
+          }
         }
       },
 

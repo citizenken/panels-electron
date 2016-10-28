@@ -83,8 +83,13 @@ snap-content {
   background-color: #eee;
 }
 
+.snap-drawers {
+  background-color: darkgray;
+}
+
 snap-drawer {
   border-right: medium solid darkgray;
+  background-color: #eee;
 }
 
 .open-sidebar {
@@ -165,11 +170,20 @@ snap-drawer {
   display: inline-block;
   opacity: 0;
   text-align: center;
-  font-size: 34px; 
+  font-size: 34px;
 }
 
 .collab-cursor:hover .cursor-name {
   opacity: 1;
+}
+
+.info-link {
+  text-align: center;
+  display: block;
+}
+
+a {
+  cursor: pointer;
 }
 
 /*.fade-out {
@@ -177,7 +191,7 @@ snap-drawer {
   -webkit-animation: fadeOut 2s forwards;
   animation: fadeOut 2s;
   -webkit-animation-delay: 2s forwards;
-  animation-delay: 2s; 
+  animation-delay: 2s;
 }
 
 @-webkit-keyframes fadeOut {

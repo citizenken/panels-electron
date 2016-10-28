@@ -71,7 +71,7 @@ angular.module('panels')
           self.syncRemoteToLocal();
         });
         self.update();
-      } else if (self.sync) {
+      } else if (self.sync && !angular.equals({}, firebaseService)) {
         firebaseService.createFileRef(self).then(function () {
           console.log(firebaseService.loadUserFiles(firebaseService.userRef));
         });

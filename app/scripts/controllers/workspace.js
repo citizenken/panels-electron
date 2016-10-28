@@ -24,7 +24,7 @@ angular.module('panels')
       content: null
     };
 
-    ctrl.online = true;
+    ctrl.online = null;
     ctrl.user = null;
     ctrl.scriptType = 'comicbook';
     ctrl.init = init;
@@ -46,12 +46,10 @@ angular.module('panels')
 
 
     function init () {
+      ctrl.online = onlineService.online;
       fileService.loadFiles();
-      if (onlineService.online && firebaseService.hasFirebaseAuthStored()) {
+      if (ctrl.online && firebaseService.hasFirebaseAuthStored()) {
         firebaseService.signIn()
-        .then(function (user) {
-          ctrl.user = user;
-        })
         .then(fileService.loadFromRemote.bind(fileService))
         .then(firebaseService.loadUsers.bind(firebaseService))
         .then(ctrl.loadFiles);
@@ -74,7 +72,8 @@ angular.module('panels')
     function setControllerFiles () {
       ctrl.workingFile = fileService.currentFile;
       ctrl.files = fileService.files;
-      if (firebaseService.userRef !== null) {
+      if (!angular.equals({}, firebaseService) &&
+        firebaseService.userRef !== null) {
         codemirrorService.showAllUserCursors();
       }
     }

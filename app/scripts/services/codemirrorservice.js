@@ -8,11 +8,11 @@
  * Factory in the panelsElectronApp.
  */
 
-var tinycolor = require("tinycolor2");
+var tinycolor = require('tinycolor2');
 
 angular.module('panels')
-  .factory('codemirrorService', ['firebaseService', 'fileService', '$rootScope', 'lodash', 'utilityService',
-    function (firebaseService, fileService, $rootScope, lodash, utilityService) {
+  .factory('codemirrorService', ['firebaseService', 'fileService', '$rootScope', 'lodash', 'utilityService', 'sidebarService',
+    function (firebaseService, fileService, $rootScope, lodash, utilityService, sidebarService) {
     var codemirrorService = {
       editor: null,
       cursors: {},
@@ -46,7 +46,8 @@ angular.module('panels')
 
         $rootScope.$emit('onFocus');
         self.skipCursorUpdate = false;
-        if (firebaseService.userRef &&
+        if (!angular.equals({}, firebaseService) &&
+          firebaseService.userRef &&
           firebaseService.userRef.currentFile === fileService.currentFile.id &&
           lodash.has(firebaseService.userRef, 'currentCursorPosition')) {
             self.editor.setCursor(firebaseService.userRef.currentCursorPosition);
@@ -120,11 +121,11 @@ angular.module('panels')
 
               var cursorContainer = angular.element('<div></div>')
               .addClass('collab-cursor');
-              
+
               var cursor = angular.element('<div></div>')
               .addClass('cursor')
               .css('border-color', cursorColor);
-              
+
               var cursorImage = null;
               if (lodash.has(firebaseService.userObjects[userId], 'photoURL')) {
                 cursorImage = angular.element('<img></img>')
@@ -134,18 +135,18 @@ angular.module('panels')
                 .match(/(^[a-zA-Z]{1}| [a-zA-Z]{1})/g)
                 .join('')
                 .replace(' ', '');
-                
+
                 cursorImage = angular.element('<div></div>')
                 .text(initials.toUpperCase());
               }
 
-              cursorImage.addClass("cursor-name")
-              .css('background-color', cursorColor);            
+              cursorImage.addClass('cursor-name')
+              .css('background-color', cursorColor);
 
               if (tinycolor(cursorColor).isLight()) {
                 cursorImage.css('color', 'black');
               }
-              
+
               cursorContainer.append(cursor);
 
               self.cursors[userId] = {
@@ -159,10 +160,17 @@ angular.module('panels')
               self.cursors[userId].cursor = bookmark;
 
               var cursorCssPos = self.editor.cursorCoords(firebaseService.userObjects[userId].currentCursorPosition, 'window');
-              
+
+
+              var left = cursorCssPos.left - 25;
+              // Adjust position if sidebar is open or not
+              if (sidebarService.sidebarStatus === 'left') {
+                left -= 265;
+              }
+
               cursorImage
               .css('top', cursorCssPos.top - 50)
-              .css('left', cursorCssPos.left - 25);
+              .css('left', left);
               cursorContainer.append(cursorImage);
         }
       }
@@ -181,6 +189,12 @@ angular.module('panels')
       }
     });
 
+   $rootScope.$on('snapEvent', function () {
+      // Recalculate the cursors when the sidebar closes
+      if (!angular.equals({}, codemirrorService.cursors)) {
+        codemirrorService.showAllUserCursors();
+      }
+    });
 
     return codemirrorService;
   }]);

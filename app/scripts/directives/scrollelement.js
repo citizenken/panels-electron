@@ -11,11 +11,10 @@ angular.module('panels')
     return {
       restrict: 'AE',
       scope: {
-        scrollAnchor: "@"
+        scrollAnchor: '@'
       },
       link: function postLink(scope, element) {
-        var origOffset = angular.element(element).offset(),
-        origPosition = angular.element(element).position(),
+        var origPosition = angular.element(element).position(),
         targetEl = angular.element(element),
         scrollEl = angular.element('snap-content');
 
@@ -23,10 +22,10 @@ angular.module('panels')
           targetEl.css('top', '0px');
         }
 
-        scrollEl.on('scroll', function (e) {
+        scrollEl.on('scroll', function () {
           if (scope.scrollAnchor){
             if (targetEl.offset().top < 0) {
-              targetEl.offset({top: 0});  
+              targetEl.offset({top: 0});
             } else if (targetEl.position().top > origPosition.top) {
               targetEl.offset({top: 0});
             } else if (targetEl.position().top < origPosition.top) {
