@@ -70,7 +70,6 @@ angular.module('panels')
         self.unwatch = firebaseService.files[self.id].$watch(function () {
           self.syncRemoteToLocal();
         });
-        self.update();
       } else if (self.sync && !angular.equals({}, firebaseService)) {
         firebaseService.createFileRef(self).then(function () {
           console.log(firebaseService.loadUserFiles(firebaseService.userRef));

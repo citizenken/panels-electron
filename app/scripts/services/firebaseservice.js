@@ -140,15 +140,22 @@ angular.module('panels')
           self.firebaseObjects.push(users);
 
           users
-          .$loaded(function (data) {
+          .$loaded()
+          .then(function (data) {
             angular.forEach(data, function (value, key) {
               if (key.indexOf('$') === -1) {
                 var userObj = $firebaseObject(self.users.child(key));
                 userObj.$watch(self.onUserChange);
-                self.userObjects[key] = userObj;
+                userObj.$loaded()
+                .then(function (user) {
+                  self.userObjects[key] = user;
+                });
                 self.firebaseObjects.push(userObj);
               }
             });
+            return $q.resolve();
+          })
+          .then(function () {
             $rootScope.$emit('usersLoaded', self.userObjects);
             return $q.resolve();
           });

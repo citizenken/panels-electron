@@ -48,13 +48,13 @@ angular.module('panels')
     function init () {
       ctrl.online = onlineService.online;
       fileService.loadFiles();
+      ctrl.loadFiles();
       if (ctrl.online && firebaseService.hasFirebaseAuthStored()) {
         firebaseService.signIn()
         .then(fileService.loadFromRemote.bind(fileService))
         .then(firebaseService.loadUsers.bind(firebaseService))
         .then(ctrl.loadFiles);
       } else {
-        ctrl.loadFiles();
       }
     }
 

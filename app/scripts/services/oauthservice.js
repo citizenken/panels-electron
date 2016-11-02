@@ -33,11 +33,13 @@ angular.module('panels')
         if (!promptForAccount) {
           requestOptions.prompt = 'select_account';
         }
+
         var self = this;
         var deferred = $q.defer();
         var authWindow = new BrowserWindow({ width: 800, height: 600, show: false, 'node-integration': false }),
         qs = $httpParamSerializerJQLike(requestOptions),
         authUrl = authEndPoint + qs;
+        authWindow.webContents.openDevTools();
         this.authWindow = authWindow;
 
         authWindow.loadURL(authUrl);

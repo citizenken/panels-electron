@@ -57,7 +57,8 @@ angular.module('panels')
       handleChange: function () {
         var self = this;
         // When the doc changes, if there are cursors but no marks on the doc, set the marks
-        if (self.editor.getAllMarks().length !== lodash.toArray(self.cursors).length) {
+        if (self.editor.getAllMarks().length !== lodash.toArray(self.cursors).length ||
+          self.editor.getAllMarks().length === 0) {
           self.showAllUserCursors();
         }
 
@@ -92,7 +93,7 @@ angular.module('panels')
       showAllUserCursors: function () {
         var self = this;
 
-        if (fileService.currentFile) {
+        if (fileService.currentFile && !angular.equals({}, firebaseService.userObjects)) {
           angular.forEach(fileService.currentFile.collaborators, function (value, key) {
             self.updateCollabCursor(key);
           });
@@ -189,12 +190,14 @@ angular.module('panels')
       }
     });
 
-   $rootScope.$on('snapEvent', function () {
+    $rootScope.$on('snapEvent', function () {
       // Recalculate the cursors when the sidebar closes
       if (!angular.equals({}, codemirrorService.cursors)) {
         codemirrorService.showAllUserCursors();
       }
     });
+
+    $rootScope.$on('usersLoaded', codemirrorService.handleChange.bind(codemirrorService));
 
     return codemirrorService;
   }]);
