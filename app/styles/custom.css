@@ -186,6 +186,12 @@ a {
   cursor: pointer;
 }
 
+.bootstrap-switch-center-switch {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
 /*.fade-out {
   opacity: 1;
   -webkit-animation: fadeOut 2s forwards;

@@ -12,9 +12,8 @@ angular.module('panels')
     var service = {
       online: null,
       updateOnlineStatus: function () {
-        console.log('foo');
         this.online = navigator.onLine;
-        $rootScope.$emit('onlineStatusChange', service.online);
+        $rootScope.$emit('onlineStatusChange', this.online);
       },
 
       init: function () {
@@ -23,7 +22,6 @@ angular.module('panels')
       }
     };
 
-    // service.init();
     service.updateOnlineStatus();
     window.addEventListener('online',  service.updateOnlineStatus);
     window.addEventListener('offline', service.updateOnlineStatus);

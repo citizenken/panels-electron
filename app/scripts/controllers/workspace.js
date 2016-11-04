@@ -113,9 +113,7 @@ angular.module('panels')
       ctrl.tab = tab;
     }
 
-
     ctrl.init();
-
 
     watcherService.create('currentFileUpdate', function () {
         if (ctrl.workingFile) {
@@ -135,6 +133,11 @@ angular.module('panels')
       return fileService.saved;
     }, function (saved) {
       ctrl.saved = saved;
+    });
+
+    $rootScope.$on('onlineStatusChange', function (e, d) {
+      ctrl.online = d;
+      $scope.$apply();
     });
 
     watcherService.enable($scope, 'showSaveStatus');

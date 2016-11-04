@@ -80,6 +80,9 @@ angular.module('panels')
     var setSync = function () {
       var self = this;
       self.sync = true;
+      if (lodash.has(firebaseService.files, self.id)) {
+        self.syncFiles(firebaseService.files[self.id]);
+      }
       self.setWatch();
     };
 

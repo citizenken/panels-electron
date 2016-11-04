@@ -20,7 +20,7 @@ angular
     'ui.bootstrap',
     'ui.keypress',
     'firebase',
-    'ui.toggle'
+    'frapontillo.bootstrap-switch'
   ])
   .config(['snapRemoteProvider', function (snapRemoteProvider) {
     var config = {

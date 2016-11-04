@@ -8,9 +8,9 @@
  * Factory in the panels.
  */
 angular.module('panels')
-  .factory('fileService', ['utilityService', 'localFileService', 'remoteFileService',
+  .factory('fileService', ['$rootScope', 'utilityService', 'localFileService', 'remoteFileService',
     'lodash', '$q', 'firebaseService', '$timeout', 'scriptService',
-    function (utilityService, localFileService, remoteFileService,
+    function ($rootScope, utilityService, localFileService, remoteFileService,
       lodash, $q, firebaseService, $timeout, scriptService) {
 
     var fileService = {
@@ -161,6 +161,12 @@ angular.module('panels')
         }
       }
     };
+
+    $rootScope.$on('onlineStatusChange', function (e, d) {
+      if (d) {
+        fileService.loadFromRemote();
+      }
+    });
 
 
     return fileService;

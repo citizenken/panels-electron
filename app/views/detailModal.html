@@ -26,7 +26,7 @@
           <td>
             <ul>
                 <li ng-repeat="(key, value) in ctrl.file.collaborators">
-                    {{ ctrl.users[key].displayName }}
+                    {{ ctrl.users[key].displayName }} ({{ ctrl.users[key].username }})
                 </li>
             </ul>
           </td>

@@ -93,7 +93,9 @@ angular.module('panels')
       showAllUserCursors: function () {
         var self = this;
 
-        if (fileService.currentFile && !angular.equals({}, firebaseService.userObjects)) {
+        if (fileService.currentFile &&
+          firebaseService.userObjects &&
+          !angular.equals({}, firebaseService.userObjects)) {
           angular.forEach(fileService.currentFile.collaborators, function (value, key) {
             self.updateCollabCursor(key);
           });
