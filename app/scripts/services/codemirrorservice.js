@@ -11,8 +11,8 @@
 var tinycolor = require('tinycolor2');
 
 angular.module('panels')
-  .factory('codemirrorService', ['firebaseService', 'fileService', '$rootScope', 'lodash', 'utilityService', 'sidebarService',
-    function (firebaseService, fileService, $rootScope, lodash, utilityService, sidebarService) {
+  .factory('codemirrorService', ['firebaseService', 'fileService', '$rootScope', 'lodash', 'utilityService', 'sidebarService', '$window',
+    function (firebaseService, fileService, $rootScope, lodash, utilityService, sidebarService, $window) {
     var codemirrorService = {
       editor: null,
       cursors: {},
@@ -55,7 +55,14 @@ angular.module('panels')
       },
 
       handleChange: function () {
-        var self = this;
+        var self = this,
+        content = self.editor.getValue();
+
+        if (content[content.length - 1]  === '\n') {
+          $window.CodeMirror.commands.showHints(self.editor);
+          
+        }
+
         // When the doc changes, if there are cursors but no marks on the doc, set the marks
         if (self.editor.getAllMarks().length !== lodash.toArray(self.cursors).length ||
           self.editor.getAllMarks().length === 0) {

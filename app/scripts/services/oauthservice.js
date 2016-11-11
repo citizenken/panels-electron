@@ -39,7 +39,6 @@ angular.module('panels')
         var authWindow = new BrowserWindow({ width: 800, height: 600, show: false, 'node-integration': false }),
         qs = $httpParamSerializerJQLike(requestOptions),
         authUrl = authEndPoint + qs;
-        authWindow.webContents.openDevTools();
         this.authWindow = authWindow;
 
         authWindow.loadURL(authUrl);
