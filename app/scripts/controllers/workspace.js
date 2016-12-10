@@ -28,7 +28,6 @@ angular.module('panels')
     ctrl.user = null;
     ctrl.scriptType = 'comicbook';
     ctrl.init = init;
-    ctrl.createFile = createFile;
     ctrl.focusPage = focusPage;
     ctrl.codemirrorLoaded = codemirrorLoaded;
     ctrl.typeDelayTimer = null;
@@ -86,13 +85,6 @@ angular.module('panels')
       fileService.syncFile();
     }
 
-    function createFile () {
-      fileService.create('comicbook');
-      fileService.setCurrentFile();
-      ctrl.setControllerFiles();
-      // scriptService.generateElementHint();
-    }
-
     function changeFile (fileId) {
       fileService.setFile(fileId);
       ctrl.setControllerFiles();
@@ -148,4 +140,5 @@ angular.module('panels')
     });
 
     $rootScope.$on('signedIn', ctrl.loadFiles);
+    $rootScope.$on('filedCreated', ctrl.setControllerFilese);
   }]);

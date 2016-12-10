@@ -21,8 +21,10 @@ angular.module('panels')
         for (var key in localStorage){
           if (key.indexOf(filePrefix) > -1) {
             var file = this.reviveFromJson(localStorage.getItem(key));
-            file.setWatch();
-            files[file.id] = file;
+            if (!file.deleted) {
+              file.setWatch();
+              files[file.id] = file;
+            }
           }
         }
         return files;

@@ -107,14 +107,16 @@ angular.module('panels')
         angular.forEach(firebaseService.files, function (value) {
           value.$loaded()
           .then(function () {
-            if (!lodash.has(self.files, value.id)) {
-              self.createFromRemote(value)
-              .then(function () {
+            if (!value.deleted) {
+              if (!lodash.has(self.files, value.id)) {
+                self.createFromRemote(value)
+                .then(function () {
+                  self.files[value.id].setWatch();
+                });
+              } else {
+                self.files[value.id].syncFiles(value);
                 self.files[value.id].setWatch();
-              });
-            } else {
-              self.files[value.id].syncFiles(value);
-              self.files[value.id].setWatch();
+              }
             }
           });
         });

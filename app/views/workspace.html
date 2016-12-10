@@ -1,4 +1,4 @@
-<snap-drawer>
+<snap-drawer snap-drawer="left">
   <div ng-include="'views/sidebar.html'"></div>
 </snap-drawer>
 
@@ -6,29 +6,15 @@
   <div class="open-sidebar" scroll-element snap-toggle="left">
     <div class="open-sidebar-button">
     <span class="sidebar-icon block glyphicon glyphicon-menu-hamburger"></span>
-      <!-- <span ng-show="workspace.snapState === 'closed'" class="sidebar-icon block glyphicon glyphicon-triangle-right"></span> -->
-      <!-- <span ng-show="workspace.snapState === 'left'" class="sidebar-icon block glyphicon glyphicon-triangle-left"></span> -->
     </div>
   </div>
   <div class="title-header page-header no-bottom-margin">
     <div class="form-group">
         <input type="text" class="form-control title-input" placeholder="Untitled {{ workspace.workingFile.type }}"
-        pu-elastic-input pu-elastic-input-minwidth="500px" pu-elastic-input-maxwidth="1000px" ng-model="workspace.workingFile.title"
+        pu-elastic-input pu-elastic-input-minwidth="300px" pu-elastic-input-maxwidth="1000px" ng-model="workspace.workingFile.title"
         ui-keypress="{13:'workspace.doBlur($event)'}">
-        <!-- <i ng-show="workspace.saved" class="block glyphicon glyphicon-floppy-saved"></i> -->
     </div>
   </div>
-<!--   <nav class="navbar navbar-default no-bottom-margin">
-    <div id="navbar" class="collapse navbar-collapse">
-      <button snap-toggle="left" class="btn btn-default navbar-btn menu-btn" aria-label="Menu">
-        <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
-      </button>
-      <p class="navbar-text"><i ng-show="workspace.saved" class="block glyphicon glyphicon-floppy-saved"></i></p>
-    </div>
-  </nav> -->
-  <button ng-click="workspace.signIn()">Login</button>
-  <button ng-click="workspace.syncFile()">Sync</button>
-  <button ng-click="workspace.createFile()">Create</button>
   <div id="page-wrapper" class="row top-padding" ng-click="workspace.focusPage()">
     <div class="col-md-11 col-md-offset-custom">
       <div class="page col-md-11">
@@ -48,15 +34,8 @@
               <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
             </a>
           </li>
-          <!--<li><a data-toggle="tab">Messages</a></li>-->
-          <!--<li><a data-toggle="tab">Settings</a></li>-->
         </ul>
       </div>
     </div>
   </div>
-  <!-- <footer class="footer">
-    <div class="container">
-      <p class="text-muted">Questions? Comments? Improvements? Contact <a href="https://github.com/citizenken" target="_blank">Ken Petti</a> on Slack or <a href="mailto:ken.petti@cloudlock.com?Subject=Kraken">by email</a></p>
-    </div>
-  </footer> -->
 </snap-content>

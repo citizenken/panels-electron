@@ -105,7 +105,7 @@ angular.module('panels')
               differences.push(key);
             } else if (lodash.isObject(value) && lodash.keys(value).length > 0) {
               differences.push(key);
-            } else if (lodash.isString(value)) {
+            } else if (lodash.isString(value) || lodash.isBoolean(value)) {
               differences.push(key);
             }
         }

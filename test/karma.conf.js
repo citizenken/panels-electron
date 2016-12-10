@@ -38,7 +38,8 @@ module.exports = function(config) {
       'app/bower_components/firebase/firebase.js',
       'app/bower_components/angularfire/dist/angularfire.js',
       'app/bower_components/angular-ui-keypress/keypress.js',
-      'app/bower_components/angular-bootstrap-toggle/dist/angular-bootstrap-toggle.min.js',
+      'app/bower_components/bootstrap-switch/dist/js/bootstrap-switch.js',
+      'app/bower_components/angular-bootstrap-switch/dist/angular-bootstrap-switch.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

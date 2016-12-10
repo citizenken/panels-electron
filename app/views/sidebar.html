@@ -19,13 +19,34 @@
       </div>
     </div>
     <div class="row">
+      <ul class="list-inline">
+        <li>
+          <div class="container">
+            <div class="btn-group" uib-dropdown>
+              <button id="split-button" type="button" class="btn btn-default" ng-disabled="!sidebar.newScriptType" ng-click="sidebar.createFile()">
+                <span class="glyphicon glyphicon-plus"></span> Create {{ sidebar.newScriptType }} script</span>
+              </button>
+              <button type="button" class="btn btn-primary" uib-dropdown-toggle>
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
+                <li role="menuitem" ng-repeat="scriptType in sidebar.scriptTypes">
+                  <a ng-click="sidebar.newScriptType = scriptType">{{ scriptType }}</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="row">
       <div class="profile-container">
         <h4>Your files:</h4>
       </div>
     </div>
     <div class="row">
       <uib-accordion close-others="true">
-        <div uib-accordion-group ng-repeat="file in workspace.files" class="panel-modifications panel-default" is-open="sidebar.openAccordion[file.id]">
+        <div uib-accordion-group ng-repeat="file in workspace.files" class="panel-modifications panel-default" is-open="sidebar.openAccordion[file.id]" ng-if="!file.deleted">
           <uib-accordion-heading>
             <p>{{ file.title || 'Untitled ' + file.type }}<span class="current-dot" ng-if="file.id == workspace.workingFile.id"></span></p>
           </uib-accordion-heading>
@@ -54,45 +75,22 @@
             <li>
             </li>
           </ul>
-            <input bs-switch
-            ng-model="file.sync"
-            type="checkbox"
-            switch-active="{{ workspace.online }}"
-            switch-change="sidebar.setSync(file.id)"
-            switch-icon="glyphicon glyphicon-cloud-upload"
-            switch-wrapper="center-switch"></input>
-          <!-- <a class="info-link" ng-click="sidebar.showDetail(file.id)" ng-if="sidebar.detail != file.id">Show details</a> -->
-          <!-- <a class="info-link" ng-click="sidebar.showDetail(file.id)" ng-if="sidebar.detail == file.id">Hide details</a> -->
-<!--           <div ng-show="sidebar.detail == file.id">
-            <table class="table table-striped table-condensed">
-              <tbody>
-                <tr>
-                  <td>Script type</td>
-                  <td>{{ file.type }}</td>
-                </tr>
-                <tr>
-                  <td>Created on</td>
-                  <td>{{ file.createdOn | date : 'shortDate' }}</td>
-                </tr>
-                <tr>
-                  <td>Last modified</td>
-                  <td>{{ file.modifiedOn | date : 'short' }}</td>
-                </tr>
-                <tr>
-                  <td>Author</td>
-                  <td>{{ sidebar.users[file.author].displayName }}</td>
-                </tr>
-                <tr ng-if="sidebar.users">
-                  <td>Collaborators</td>
-                  <td>
-                    <ul ng-repeat="(key, value) in file.collaborators">
-                     <li>{{ sidebar.users[key].displayName }}</li>
-                    </ul>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div> -->
+          <ul class="list-inline">
+            <li>
+              <input bs-switch
+              ng-model="file.sync"
+              type="checkbox"
+              switch-active="{{ workspace.online }}"
+              switch-change="sidebar.setSync(file.id)"
+              switch-icon="glyphicon glyphicon-cloud-upload"
+              switch-wrapper="center-switch"></input>
+            </li>
+            <li>
+              <button type="button" class="btn btn-danger" ng-click="sidebar.deleteFile(file.id)">
+                <span class="glyphicon glyphicon glyphicon-trash"></span> Delete
+              </button>
+            </li>            
+          </ul>
     </div>
   </div>
   <div class="grid" ng-if="sidebar.inspectHistory">

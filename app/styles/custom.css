@@ -8,7 +8,7 @@
   border-style: none;
   border-radius: 0;
   border-bottom: medium solid #ff0000;
-  font-size: 36px;
+  font-size: 26px;
   font-weight: bold;
 }
 
@@ -90,6 +90,7 @@ snap-content {
 snap-drawer {
   border-right: medium solid darkgray;
   background-color: #eee;
+  overflow-y: hidden;
 }
 
 .open-sidebar {
@@ -209,3 +210,13 @@ a {
     from {opacity: 1;}
     to {opacity: 0;}
 }*/
+
+.create-text {
+  display: inline-block;
+}
+
+.center {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+}
