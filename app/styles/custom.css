@@ -220,3 +220,7 @@ a {
   margin-right: auto;
   margin-left: auto;
 }
+
+.ui-select-container {
+  width: inherit !important;
+}

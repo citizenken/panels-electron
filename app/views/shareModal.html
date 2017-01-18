@@ -1,0 +1,36 @@
+<div class="modal-header">
+    <h3 class="modal-title" id="modal-title" ng-if="ctrl.file.title">{{ ctrl.file.title }} Details</h3>
+    <h3 class="modal-title" id="modal-title" ng-if="!ctrl.file.title">Untitled {{ ctrl.file.type }} Details</h3>
+</div>
+<div class="modal-body" id="modal-body">
+  <h3>Collaborators:</h3>
+  <ul>
+      <li ng-repeat="(key, value) in ctrl.file.collaborators">
+          {{ ctrl.users[key].displayName }} ({{ ctrl.users[key].username }})
+      </li>
+  </ul>
+  <h3>Add collaborators:</h3>
+    <ui-select multiple ng-model="ctrl.user.selected"
+             theme="bootstrap"
+             ng-disabled="ctrl.disabled"
+             ortable="true" close-on-select="false"
+             style="width: 600px;"
+             title="Select a user">
+      <ui-select-match placeholder="Enter a user email...">{{$item.displayName}}</ui-select-match>
+      <ui-select-choices repeat="user as (key, user) in ctrl.users | propsFilter: {displayName: $select.search, username: $select.search}">
+        <div ng-bind-html="user.displayName | highlight: $select.search"></div>
+        <small>email: {{user.username}}</small>
+      </ui-select-choices>
+    </ui-select>
+    <h3>Collaborator Access: 
+      <div class="btn-group">
+          <label class="btn btn-primary" ng-model="ctrl.access" uib-btn-radio="'Edit'">Edit</label>
+          <label class="btn btn-primary" ng-model="ctrl.access" uib-btn-radio="'Comment'">Comment</label>
+          <label class="btn btn-primary" ng-model="ctrl.access" uib-btn-radio="'View'">View</label>
+      </div>
+    </h3>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ctrl.done()">Done</button>
+    <button class="btn btn-warning" type="button" ng-click="ctrl.cancel()">Cancel</button>
+</div>
