@@ -31,7 +31,11 @@ angular.module('panels')
       .then(function (remoteFile) {
         var localDifferences = self.getDifferences(remoteFile, self, excludeKeys);
         var toCopy = localDifferences.concat(excludeKeys);
-        if (remoteFile.modifiedOn > self.modifiedOn && localDifferences.length > 0) {
+        // jenky if statement to add author to a file if it hasn't been added. only runs on app load
+        // there should be a better fix. There is a case when a new file syncs for the first time, 
+        // it still doesn't get an author, if that file was created before firebase loaded the current user
+        if ((localDifferences.indexOf('author') > -1 && localDifferences.length == 1) ||
+          (remoteFile.modifiedOn > self.modifiedOn && localDifferences.length > 0)) {
           watcherService.disable('currentFileUpdate');
           angular.forEach(toCopy, function (value) {
             self[value] = remoteFile[value];
@@ -79,7 +83,9 @@ angular.module('panels')
 
     var setSync = function () {
       var self = this;
+      var oldVersion = angular.copy(self);
       self.sync = true;
+      self.update(oldVersion, true);
       if (lodash.has(firebaseService.files, self.id)) {
         self.syncFiles(firebaseService.files[self.id]);
       }
@@ -114,15 +120,48 @@ angular.module('panels')
       return differences;
     };
 
-    var addCollaborators = function (collaborators, access) {
+    var modifyCollaborators = function (toAdd, toRemove, toUpdate) {
       var self = this;
       var oldVersion = angular.copy(self);
+      self.removeCollaborators(toRemove);
+      self.updateCollaborators(toUpdate);
+      self.addCollaborators(toAdd.users, toAdd.access);
+      self.update(oldVersion, true);
+    }
+
+    var addCollaborators = function (collaborators, access) {
+      var self = this;
       angular.forEach(collaborators, function (collab) {
         self.collaborators[collab.id] = access;
+        if (lodash.has(firebaseService.userObjects, collab.id)) {
+          firebaseService.updateUserCollaborator(collab.id, {file:self.id, access:access});
+        }
       })
-
-      self.update(oldVersion, true);
     };
+
+    var removeCollaborators = function (userIds) {
+      var self = this;
+      var collabIds = lodash.keys(self.collaborators);
+
+      angular.forEach(userIds, function (userId) {
+        if (collabIds.indexOf(userId) > -1) {
+          delete self.collaborators[userId];
+          if (lodash.has(firebaseService.userObjects, userId)) {
+            firebaseService.updateUserCollaborator(userId, null, self.id);
+          }
+        }
+      })
+    };
+
+    var updateCollaborators = function (toUpdate) {
+      var self = this;
+      angular.forEach(toUpdate, function (access, userId) {
+        self.collaborators[userId] = access;
+        if (lodash.has(firebaseService.userObjects, userId)) {
+          firebaseService.updateUserCollaborator(userId, null, null, {file:self.id, access:access});
+        }        
+      })
+    }
 
     return function LocalFile (scriptType) {
       File.call(this, scriptType);
@@ -138,6 +177,9 @@ angular.module('panels')
       this.syncLocalToRemote = syncLocalToRemote;
       this.getDifferences = getDifferences;
       this.addCollaborators = addCollaborators;
+      this.removeCollaborators = removeCollaborators;
+      this.updateCollaborators = updateCollaborators;
+      this.modifyCollaborators = modifyCollaborators;                  
 
       if (this.sync) {
         this.setWatch();

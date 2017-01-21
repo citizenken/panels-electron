@@ -182,6 +182,28 @@ angular.module('panels')
             self.userObjects[userId].currentCursorPosition = cursor;
             self.userObjects[userId].$save();
           }
+        },
+
+        updateUserCollaborator: function (userId, add, remove, update) {
+          var self = this;
+          if (remove) {
+            delete self.userObjects[userId].collaborator[remove];
+            if (self.userObjects[userId].currentFile == remove) {
+              delete self.userObjects[userId].currentFile;
+            }
+          }
+
+          if (update) {
+            self.userObjects[userId].collaborator[update.file] = update.access;
+          }  
+
+          if (add) {
+            if (!lodash.has(self.userObjects[userId], 'collaborator')) {
+              self.userObjects[userId].collaborator = {};
+            }
+            self.userObjects[userId].collaborator[add.file] = add.access;
+          }                    
+          self.userObjects[userId].$save();
         }
       };
 

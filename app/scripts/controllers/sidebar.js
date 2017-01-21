@@ -101,7 +101,10 @@ angular.module('panels')
           },
           users: function () {
             return ctrl.users;
-          }
+          },
+          currentUser: function () {
+            return ctrl.user;
+          }          
         }
       });
     }

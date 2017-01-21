@@ -27,6 +27,10 @@ angular.module('panels')
         // TODO: add logic to determine if connected to remote storage
 
         var newFile = localFileService.create(scriptType);
+
+        if (lodash.has(firebaseService, 'userRef') && firebaseService.userRef) {
+          newFile.author = firebaseService.userRef.id;
+        }
         newFile.save();
         this.files[newFile.id] = newFile;
         return newFile;

@@ -5,12 +5,12 @@
  * We want to perform an OR.
  */
 angular.module('panels').filter('notCollabFilter', ['lodash', function(lodash) {
-  return function(items, file) {
+  return function(items, file, removedUsers, currentUser) {
     var out = [];
     var keys = lodash.keys(file.collaborators);
 
     items.forEach(function(item) {
-      if (keys.indexOf(item.key) == -1) {
+      if (currentUser.id != item.key && (keys.indexOf(item.key) == -1 || removedUsers.indexOf(item.key) > -1)) {
         out.push(item)
       }
     });
