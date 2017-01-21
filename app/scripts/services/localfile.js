@@ -103,7 +103,7 @@ angular.module('panels')
           value !== file2[key]) {
             if (lodash.isArray(value) && !lodash.isEmpty(value)) {
               differences.push(key);
-            } else if (lodash.isObject(value) && lodash.keys(value).length > 0) {
+            } else if (lodash.isObject(value) && lodash.keys(value).length >= 0) {
               differences.push(key);
             } else if (lodash.isString(value) || lodash.isBoolean(value)) {
               differences.push(key);
@@ -112,6 +112,16 @@ angular.module('panels')
       });
 
       return differences;
+    };
+
+    var addCollaborators = function (collaborators, access) {
+      var self = this;
+      var oldVersion = angular.copy(self);
+      angular.forEach(collaborators, function (collab) {
+        self.collaborators[collab.id] = access;
+      })
+
+      self.update(oldVersion, true);
     };
 
     return function LocalFile (scriptType) {
@@ -127,6 +137,7 @@ angular.module('panels')
       this.syncRemoteToLocal = syncRemoteToLocal;
       this.syncLocalToRemote = syncLocalToRemote;
       this.getDifferences = getDifferences;
+      this.addCollaborators = addCollaborators;
 
       if (this.sync) {
         this.setWatch();

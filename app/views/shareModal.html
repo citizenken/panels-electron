@@ -7,22 +7,26 @@
   <ul>
       <li ng-repeat="(key, value) in ctrl.file.collaborators">
           {{ ctrl.users[key].displayName }} ({{ ctrl.users[key].username }})
+          <span class="glyphicon glyphicon-remove" ng-click="ctrl.removeCollaborator(key)"></span>
       </li>
   </ul>
   <h3>Add collaborators:</h3>
-    <ui-select multiple ng-model="ctrl.user.selected"
-             theme="bootstrap"
-             ng-disabled="ctrl.disabled"
-             ortable="true" close-on-select="false"
-             style="width: 600px;"
-             title="Select a user">
+    <ui-select 
+            multiple 
+            ng-model="ctrl.selectedUsers"
+            theme="bootstrap"
+            ng-disabled="ctrl.disabled"
+            sortable="true"
+            close-on-select="false"
+            style="width: 600px;"
+            title="Select a user">
       <ui-select-match placeholder="Enter a user email...">{{$item.displayName}}</ui-select-match>
-      <ui-select-choices repeat="user as (key, user) in ctrl.users | propsFilter: {displayName: $select.search, username: $select.search}">
+      <ui-select-choices repeat="user as (key, user) in ctrl.users | notCollabFilter:ctrl.file | propsFilter: {displayName: $select.search, username: $select.search}">
         <div ng-bind-html="user.displayName | highlight: $select.search"></div>
         <small>email: {{user.username}}</small>
       </ui-select-choices>
     </ui-select>
-    <h3>Collaborator Access: 
+    <h3>Collaborators can 
       <div class="btn-group">
           <label class="btn btn-primary" ng-model="ctrl.access" uib-btn-radio="'Edit'">Edit</label>
           <label class="btn btn-primary" ng-model="ctrl.access" uib-btn-radio="'Comment'">Comment</label>

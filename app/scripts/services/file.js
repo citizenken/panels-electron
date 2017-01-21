@@ -21,7 +21,7 @@ angular.module('panels')
       this.sync = false;
       this.type = scriptType;
       this.history = [];
-      this.collaborators = [];
+      this.collaborators = {};
       this.related = [];
       this.cursor = null;
       this.deleted = false;
