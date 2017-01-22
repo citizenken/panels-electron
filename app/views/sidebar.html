@@ -63,7 +63,7 @@
               </button>
             </li>
             <li>
-              <button type="button" class="btn btn-default" ng-click="sidebar.shareScript(file.id)">
+              <button ng-disabled="!sidebar.user" type="button" class="btn btn-default" ng-click="sidebar.shareScript(file.id)">
                 <span class="glyphicon glyphicon-share"></span>
               </button>
             </li>
@@ -77,7 +77,8 @@
           </ul>
           <ul class="list-inline">
             <li>
-              <input bs-switch
+              <input 
+              bs-switch
               ng-model="file.sync"
               type="checkbox"
               switch-active="{{ workspace.online }}"

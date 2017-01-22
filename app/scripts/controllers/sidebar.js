@@ -118,12 +118,13 @@ angular.module('panels')
       ctrl.user = user;
     });
 
-    // $rootScope.$on('snapEvent', function (e, d) {
-    //   if (d === 'closed') {
-    //     ctrl.openAccordion = {};
-    //     $scope.$apply();        
-    //   }
-    // });
+    $rootScope.$on('snapEvent', function (e, d) {
+      if (d === 'closed') {
+        ctrl.openAccordion = {};
+        ctrl.openAccordion[fileService.currentFile.id] = true;
+        $scope.$apply();        
+      }
+    });
 
     $rootScope.$on('usersLoaded', function (e, users) {
       ctrl.users = users;
