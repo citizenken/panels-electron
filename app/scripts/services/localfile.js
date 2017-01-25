@@ -62,8 +62,6 @@ angular.module('panels')
           });
 
           return remoteFile.$save();
-        } else {
-          return $q.reject();
         }
       });
     };
@@ -106,7 +104,7 @@ angular.module('panels')
       angular.forEach(file1, function (value, key) {
         if (excludeKeys.indexOf(key) === -1 &&
           !lodash.isFunction(value) &&
-          value !== file2[key]) {
+          !angular.equals(value, file2[key])) {
             if (lodash.isArray(value) && !lodash.isEmpty(value)) {
               differences.push(key);
             } else if (lodash.isObject(value) && lodash.keys(value).length >= 0) {

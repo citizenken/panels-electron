@@ -90,7 +90,7 @@ snap-content {
 snap-drawer {
   border-right: medium solid darkgray;
   background-color: #eee;
-  overflow-y: hidden;
+  overflow: hidden !important;
 }
 
 .open-sidebar {

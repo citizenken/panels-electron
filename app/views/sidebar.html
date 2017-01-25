@@ -82,7 +82,7 @@
               ng-model="file.sync"
               type="checkbox"
               switch-active="{{ workspace.online }}"
-              switch-change="sidebar.setSync(file.id)"
+              ng-change="sidebar.setSync(file.id)"
               switch-icon="glyphicon glyphicon-cloud-upload"
               switch-wrapper="center-switch"></input>
             </li>

@@ -14,14 +14,14 @@ angular.module('panels')
     ctrl.file = file;
     ctrl.users = users;
     ctrl.currentUser = currentUser;
-    ctrl.access = 'View';
+    ctrl.access = 'view';
     ctrl.addUsers = [];
     ctrl.removeUsers = [];
     ctrl.updateUsers = {};
     ctrl.accessTypes = [
-      'Edit',
-      'Comment',
-      'View'
+      'edit',
+      'comment',
+      'view'
     ]
     ctrl.collabChanges = false;
 

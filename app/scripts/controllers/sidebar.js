@@ -21,6 +21,7 @@ angular.module('panels')
     ctrl.user = null;
     ctrl.openAccordion = {};
     ctrl.users = null;
+    ctrl.fileSync = {};
     ctrl.scriptTypes = [
       'comicbook',
       'movie',

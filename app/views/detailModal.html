@@ -21,16 +21,6 @@
           <td>Author</td>
           <td>{{ ctrl.users[ctrl.file.author].displayName }}</td>
         </tr>
-        <tr ng-if="ctrl.users">
-          <td>Collaborators</td>
-          <td>
-            <ul>
-                <li ng-repeat="(key, value) in ctrl.file.collaborators">
-                    {{ ctrl.users[key].displayName }} ({{ ctrl.users[key].username }})
-                </li>
-            </ul>
-          </td>
-        </tr>
       </tbody>
     </table>
 </div>

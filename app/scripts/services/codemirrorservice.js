@@ -48,6 +48,7 @@ angular.module('panels')
         self.skipCursorUpdate = false;
         if (!angular.equals({}, firebaseService) &&
           firebaseService.userRef &&
+          fileService.currentFile &&
           firebaseService.userRef.currentFile === fileService.currentFile.id &&
           lodash.has(firebaseService.userRef, 'currentCursorPosition')) {
             self.editor.setCursor(firebaseService.userRef.currentCursorPosition);

@@ -48,7 +48,9 @@ angular.module('panels')
       setFile: function (fileId) {
         this.currentFile = this.files[fileId];
         this.currentFile.setWatch();
-        firebaseService.setUserCurrentFile(fileId);
+          if (!angular.equals({}, firebaseService)) {
+            firebaseService.setUserCurrentFile(fileId);
+          }        
       },
 
       setSync: function (fileId) {
