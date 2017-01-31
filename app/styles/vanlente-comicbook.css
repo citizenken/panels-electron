@@ -1,0 +1,33 @@
+.cm-vlc-title {
+  display: inline-block;
+  text-decoration: underline;
+  font-weight: bold;
+  font-size: 1.25em;  
+}
+
+.cm-vlc-character {
+  display: inline-block;
+  width: 30%;
+}
+
+.cm-vlc-action, .cm-vlc-panel {
+  display: inline-block;
+  -webkit-margin-before: 0.83em;
+  -webkit-margin-after: 0.83em;
+}
+
+.cm-vlc-character, .cm-vlc-dialogue {
+  display: inline-block;
+  -webkit-margin-after: 0.25em;
+}
+
+.cm-vlc-panel {
+  font-weight: bold;
+}
+
+.cm-vlc-dialogue {
+  display: inline-block;
+  width: 70%;
+  float: right;
+  /*text-indent: 8em;*/
+}

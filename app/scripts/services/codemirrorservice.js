@@ -59,10 +59,10 @@ angular.module('panels')
         var self = this,
         content = self.editor.getValue();
 
-        if (content[content.length - 1]  === '\n') {
-          $window.CodeMirror.commands.showHints(self.editor);
+        // if (content[content.length - 1]  === '\n') {
+        //   $window.CodeMirror.commands.showHints(self.editor);
           
-        }
+        // }
 
         // When the doc changes, if there are cursors but no marks on the doc, set the marks
         if (self.editor.getAllMarks().length !== lodash.toArray(self.cursors).length ||

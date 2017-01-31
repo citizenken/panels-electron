@@ -16,7 +16,7 @@ angular.module('panels')
     ctrl.editorOptions = {
         lineWrapping : true,
         lineNumbers: false,
-        mode: 'comicbook',
+        mode: 'vanlente-comicbook',
         extraKeys: {'Ctrl-Space': 'showHints'}
     };
     ctrl.workingFile = {
