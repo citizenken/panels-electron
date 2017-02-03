@@ -62,6 +62,7 @@ angular.module('panels')
         angular.element('.CodeMirror-line:has(.cm-vlc-action)').addClass('cm-vlc-panel-wrapper');
         angular.element( '.CodeMirror-line:has(.cm-vlc-character)').addClass('cm-vlc-character-wrapper');
         
+        
         // if (content.length > 1) {
         //   angular.element('.CodeMirror-line:has(.cm-vlc-action)').addClass('cm-vlc-panel-wrapper');
         //   angular.element( '.CodeMirror-line:has(.cm-vlc-character)').addClass('cm-vlc-character-wrapper');
