@@ -8,8 +8,9 @@
  * Controller of the panelsElectronApp
  */
 angular.module('panels')
-  .controller('SidebarCtrl', [ '$scope', '$rootScope', 'fileService', 'firebaseService', '$uibModal',
-    function ($scope, $rootScope, fileService, firebaseService, $uibModal) {
+  .controller('SidebarCtrl', [ '$scope', '$rootScope', 'fileService', 'firebaseService', 
+    '$uibModal', 'printService',
+    function ($scope, $rootScope, fileService, firebaseService, $uibModal, printService) {
     var ctrl = this;
     ctrl.showHistory = showHistory;
     ctrl.inspectHistory = null;
@@ -32,6 +33,7 @@ angular.module('panels')
     ctrl.createFile = createFile;
     ctrl.deleteFile = deleteFile;
     ctrl.shareScript = shareScript;
+    ctrl.printDocument = printDocument;
     // ctrl.showDetailModel = showDetailModel;
 
     function showHistory (file) {
@@ -108,6 +110,10 @@ angular.module('panels')
           }          
         }
       });
+    }
+
+    function printDocument (fileId) {
+      printService.print();
     }
 
 

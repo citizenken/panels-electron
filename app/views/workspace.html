@@ -18,8 +18,8 @@
   <div id="page-wrapper" class="row top-padding" ng-click="workspace.focusPage()">
     <div class="col-md-11 col-md-offset-custom">
       <div class="page col-md-11">
-        <div ui-codemirror="{ onLoad : workspace.codemirrorLoaded }" ui-codemirror-opts="workspace.editorOptions" ng-model="workspace.workingFile.content" ui-refresh="true" ng-show="workspace.tab == 'edit'" ></div>
-        <panels-preview ng-show="workspace.tab == 'preview'" script-type="{{ workspace.file.type }}"></panels-preview>
+        <div class="CodeMirror-element" ui-codemirror="{ onLoad : workspace.codemirrorLoaded }" ui-codemirror-opts="workspace.editorOptions" ng-model="workspace.workingFile.content" ui-refresh="true" ng-show="workspace.tab == 'edit'" ></div>
+        <!-- <panels-preview ng-show="workspace.tab == 'preview'" script-type="{{ workspace.file.type }}"></panels-preview> -->
       </div>
       <div class="col-md-1 affix-top page-adjacent" scroll-element scroll-anchor="top">
         <ul class="nav nav-tabs tabs-right">

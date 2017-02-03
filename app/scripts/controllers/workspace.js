@@ -16,6 +16,7 @@ angular.module('panels')
     ctrl.editorOptions = {
         lineWrapping : true,
         lineNumbers: false,
+        singleCursorHeightPerLine: false,
         mode: 'vanlente-comicbook',
         extraKeys: {'Ctrl-Space': 'showHints'}
     };
@@ -93,6 +94,7 @@ angular.module('panels')
     function codemirrorLoaded (editor) {
       codemirrorService.editor = editor;
       codemirrorService.registerListeners();
+      ctrl.focusPage();
     }
 
     function focusPage () {

@@ -59,9 +59,13 @@ angular.module('panels')
         var self = this,
         content = self.editor.getValue();
 
-        // if (content[content.length - 1]  === '\n') {
-        //   $window.CodeMirror.commands.showHints(self.editor);
-          
+        angular.element('.CodeMirror-line:has(.cm-vlc-action)').addClass('cm-vlc-panel-wrapper');
+        angular.element( '.CodeMirror-line:has(.cm-vlc-character)').addClass('cm-vlc-character-wrapper');
+        
+        // if (content.length > 1) {
+        //   angular.element('.CodeMirror-line:has(.cm-vlc-action)').addClass('cm-vlc-panel-wrapper');
+        //   angular.element( '.CodeMirror-line:has(.cm-vlc-character)').addClass('cm-vlc-character-wrapper');
+        //   // self.editor.refresh();
         // }
 
         // When the doc changes, if there are cursors but no marks on the doc, set the marks
