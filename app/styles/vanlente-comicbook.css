@@ -10,7 +10,7 @@
   width: 30%;
 }
 
-.cm-vlc-panel-wrapper {
+.cm-vlc-panel-wrapper, .cm-vlc-action-wrapper {
   padding-top: 0.83em !important;
   padding-bottom: 0.83em !important;
 }

@@ -34,6 +34,7 @@ angular.module('panels')
         self.editor.on('blur', self.handleBlur.bind(self));
         self.editor.on('focus', self.handleFocus.bind(self));
         self.editor.on('change', self.handleChange.bind(self));
+        self.editor.on('renderLine', self.handleRenderLine.bind(self));
       },
 
       handleBlur: function () {
@@ -58,11 +59,7 @@ angular.module('panels')
       handleChange: function () {
         var self = this,
         content = self.editor.getValue();
-
-        angular.element('.CodeMirror-line:has(.cm-vlc-action)').addClass('cm-vlc-panel-wrapper');
-        angular.element( '.CodeMirror-line:has(.cm-vlc-character)').addClass('cm-vlc-character-wrapper');
-        
-        
+                
         // if (content.length > 1) {
         //   angular.element('.CodeMirror-line:has(.cm-vlc-action)').addClass('cm-vlc-panel-wrapper');
         //   angular.element( '.CodeMirror-line:has(.cm-vlc-character)').addClass('cm-vlc-character-wrapper');
@@ -88,6 +85,28 @@ angular.module('panels')
             }
           });
         }
+      },
+
+      handleRenderLine: function (instance, line, element) {
+        var self = this;
+        // console.log(instance) 
+        // console.log(line)
+        // console.log(element);
+
+        // var cursor = self.editor.getCursor();
+        angular.forEach(line.styles, function (style) {
+          if (typeof style === 'string' && style.indexOf('-wrapper') === -1) {
+            var lineInfo = self.editor.lineInfo(line);
+            var currentTokens = self.editor.getLineTokens(lineInfo.line);
+            angular.forEach(currentTokens, function (token) {
+              element.className += ' cm-' + token.type + '-wrapper';
+            });
+          }
+        })
+        // if (currentToken) {
+        //   console.log(currentToken);
+        //   self.editor.addLineClass(line, 'wrapper', 'cm-' + currentToken + '-wrapper');
+        // }        
       },
 
       updateCollabCursorLocation: function (markPos, userId) {
