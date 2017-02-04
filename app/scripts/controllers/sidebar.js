@@ -8,9 +8,9 @@
  * Controller of the panelsElectronApp
  */
 angular.module('panels')
-  .controller('SidebarCtrl', [ '$scope', '$rootScope', 'fileService', 'firebaseService', 
-    '$uibModal', 'printService',
-    function ($scope, $rootScope, fileService, firebaseService, $uibModal, printService) {
+  .controller('SidebarCtrl', [ '$scope', '$rootScope', 'fileService', 'firebaseService',
+    '$uibModal', 'printService', 'oauthService',
+    function ($scope, $rootScope, fileService, firebaseService, $uibModal, printService, oauthService) {
     var ctrl = this;
     ctrl.showHistory = showHistory;
     ctrl.inspectHistory = null;
@@ -65,6 +65,7 @@ angular.module('panels')
     function signOut () {
       ctrl.user = null;
       firebaseService.auth.$signOut();
+      oauthService.logOut();
     }
 
     function setSync (fileId) {
@@ -107,7 +108,7 @@ angular.module('panels')
           },
           currentUser: function () {
             return ctrl.user;
-          }          
+          }
         }
       });
     }
@@ -129,7 +130,7 @@ angular.module('panels')
       if (d === 'closed') {
         ctrl.openAccordion = {};
         ctrl.openAccordion[fileService.currentFile.id] = true;
-        $scope.$apply();        
+        $scope.$apply();
       }
     });
 
