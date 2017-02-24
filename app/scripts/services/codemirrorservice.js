@@ -59,12 +59,6 @@ angular.module('panels')
       handleChange: function () {
         var self = this,
         content = self.editor.getValue();
-                
-        // if (content.length > 1) {
-        //   angular.element('.CodeMirror-line:has(.cm-vlc-action)').addClass('cm-vlc-panel-wrapper');
-        //   angular.element( '.CodeMirror-line:has(.cm-vlc-character)').addClass('cm-vlc-character-wrapper');
-        //   // self.editor.refresh();
-        // }
 
         // When the doc changes, if there are cursors but no marks on the doc, set the marks
         if (self.editor.getAllMarks().length !== lodash.toArray(self.cursors).length ||
@@ -89,11 +83,8 @@ angular.module('panels')
 
       handleRenderLine: function (instance, line, element) {
         var self = this;
-        // console.log(instance) 
-        // console.log(line)
-        // console.log(element);
 
-        // var cursor = self.editor.getCursor();
+        // Iterate over the styles for each line, and apply wrapper classes for all found tokens
         angular.forEach(line.styles, function (style) {
           if (typeof style === 'string' && style.indexOf('-wrapper') === -1) {
             var lineInfo = self.editor.lineInfo(line);
@@ -102,11 +93,7 @@ angular.module('panels')
               element.className += ' cm-' + token.type + '-wrapper';
             });
           }
-        })
-        // if (currentToken) {
-        //   console.log(currentToken);
-        //   self.editor.addLineClass(line, 'wrapper', 'cm-' + currentToken + '-wrapper');
-        // }        
+        });
       },
 
       updateCollabCursorLocation: function (markPos, userId) {

@@ -195,14 +195,14 @@ angular.module('panels')
 
           if (update) {
             self.userObjects[userId].collaborator[update.file] = update.access;
-          }  
+          }
 
           if (add) {
             if (!lodash.has(self.userObjects[userId], 'collaborator')) {
               self.userObjects[userId].collaborator = {};
             }
             self.userObjects[userId].collaborator[add.file] = add.access;
-          }                    
+          }
           self.userObjects[userId].$save();
         }
       };
