@@ -21,12 +21,14 @@ angular.module('panels')
       authWindow: null,
       accessToken: null,
       googleOauth: function (promptForAccount) {
-        var self = this;
-        var deferred = $q.defer();
-        var authWindow = new BrowserWindow({ width: 800, height: 600, show: false, 'node-integration': false });
+        var self = this,
+        deferred = $q.defer(),
+        authWindow = new BrowserWindow({ width: 800, height: 600, show: false, 'node-integration': false }),
+        prompt = (!promptForAccount) ? 'select_account' : '';
         this.authWindow = authWindow;
 
-        authWindow.loadURL(authEndPoint);
+
+        authWindow.loadURL(authEndPoint + '?prompt=' + prompt);
         authWindow.once('ready-to-show', function () {
           try {
             authWindow.show();
