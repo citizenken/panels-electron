@@ -24,13 +24,14 @@ angular
     'ui.select',
     'ngSanitize'
   ])
-  .config(['snapRemoteProvider', function (snapRemoteProvider) {
+  .config(['snapRemoteProvider', '$qProvider', function (snapRemoteProvider, $qProvider) {
     var config = {
       apiKey: 'AIzaSyBFM-2jOMfbeB0gOw_Xi2WQkhBg8GTqsIQ',
       authDomain: 'panels-fd87e.firebaseapp.com',
       databaseURL: 'https://panels-fd87e.firebaseio.com',
       storageBucket: 'panels-fd87e.appspot.com',
     };
+    $qProvider.errorOnUnhandledRejections(false);
     window.firebase.initializeApp(config);
     snapRemoteProvider.globalOptions.touchToDrag = false;
   }])

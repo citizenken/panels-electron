@@ -5,10 +5,10 @@
 window.CodeMirror.defineSimpleMode("vanlente-comicbook", {
   // The start state contains the rules that are intially used
   start: [
-    
+
     {regex: /[A-Z]+$/, token: "vlc-title", next: "panel"},
     {regex: /[P]anel [0-9]+(?:\\.|:)/, token: "vlc-panel", next: "action"},
-    {regex: /[0-9]+\. [A-Z0-9]+(?: \([A-Z]+\))?: /, token: "vlc-character", next: "dialogue"},
+    {regex: /[0-9]+\.? [A-Z0-9 ]+(?: \([A-Z]+\))?: /, token: "vlc-character", next: "dialogue"},
     {regex: /[^\n]*/, token: "vlc-action", next: "start"},
   ],
   panel: [

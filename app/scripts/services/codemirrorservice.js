@@ -17,6 +17,8 @@ angular.module('panels')
       editor: null,
       cursors: {},
       skipCursorUpdate: false,
+      longestCharacerTag: null,
+      logCharTagChange: null,
 
       focusEndOfText: function () {
         var self = this,
@@ -35,6 +37,7 @@ angular.module('panels')
         self.editor.on('focus', self.handleFocus.bind(self));
         self.editor.on('change', self.handleChange.bind(self));
         self.editor.on('renderLine', self.handleRenderLine.bind(self));
+        self.editor.on('update', self.handleUpdate.bind(self));
       },
 
       handleBlur: function () {
@@ -81,19 +84,60 @@ angular.module('panels')
         }
       },
 
-      handleRenderLine: function (instance, line, element) {
+      handleUpdate: function (instance) {
         var self = this;
+        if (self.logCharTagChange) {
+          self.logCharTagChange = null;
+          instance.refresh();
+        }
+      },
+
+      handleRenderLine: function (instance, line, element) {
+        var self = this, characters = [], longestCharacterTag = null;
+
+        CodeMirror.runMode(instance.getValue(), 'vanlente-comicbook', function (text, style) {
+          if (style === 'vlc-character') {
+            if (text.length > longestCharacterTag) {
+              longestCharacterTag = text.length;
+            }
+          }
+        });
 
         // Iterate over the styles for each line, and apply wrapper classes for all found tokens
         angular.forEach(line.styles, function (style) {
           if (typeof style === 'string' && style.indexOf('-wrapper') === -1) {
             var lineInfo = self.editor.lineInfo(line);
             var currentTokens = self.editor.getLineTokens(lineInfo.line);
+
             angular.forEach(currentTokens, function (token) {
               element.className += ' cm-' + token.type + '-wrapper';
+              if (token.type === 'vlc-character') {
+                var characterTagLength = token.string.length;
+                if (longestCharacterTag !== self.longestCharacerTag) {
+                  self.longestCharacerTag = longestCharacterTag
+                  self.logCharTagChange = true;
+                }
+
+                var dialoguePadding = longestCharacterTag - characterTagLength,
+                dialogueEl = element.getElementsByClassName("cm-vlc-dialogue")[0];
+                if (dialogueEl) {
+                  dialogueEl.style.paddingLeft = dialoguePadding + '.1ch';
+                }
+              }
             });
           }
         });
+
+
+
+
+
+
+        // angular.forEach(characters, function (character) {
+        //   console.log(character.length);
+        // });
+
+
       },
 
       updateCollabCursorLocation: function (markPos, userId) {
