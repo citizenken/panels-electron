@@ -1,3 +1,9 @@
+@media print {
+    .cm-vlc-title-wrapper {
+      page-break-before: always !important;
+    }
+}
+
 .cm-vlc-title {
   display: inline-block;
   text-decoration: underline;

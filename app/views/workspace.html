@@ -19,23 +19,7 @@
     <div class="col-md-11 col-md-offset-custom">
       <div class="page col-md-11">
         <div class="CodeMirror-element" ui-codemirror="{ onLoad : workspace.codemirrorLoaded }" ui-codemirror-opts="workspace.editorOptions" ng-model="workspace.workingFile.content" ui-refresh="true" ng-show="workspace.tab == 'edit'" ></div>
-        <!-- <panels-preview ng-show="workspace.tab == 'preview'" script-type="{{ workspace.file.type }}"></panels-preview> -->
       </div>
-      <!-- <div class="col-md-1 affix-top page-adjacent" scroll-element scroll-anchor="top">
-        <ul class="nav nav-tabs tabs-right">
-          <li class="active">
-            <a class="text-center" data-toggle="tab" ng-click="workspace.changeTab('edit')">
-              <span ng-hide="workspace.saved" class="glyphicon glyphicon-edit"></span>
-              <span ng-show="workspace.saved" class="saved glyphicon glyphicon-floppy-saved"></span>
-            </a>
-          </li>
-          <li>
-            <a class="text-center" data-toggle="tab" ng-click="workspace.changeTab('preview')">
-              <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-            </a>
-          </li>
-        </ul>
-      </div> -->
     </div>
   </div>
 </snap-content>

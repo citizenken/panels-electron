@@ -78,11 +78,11 @@
           </ul>
           <ul class="list-inline">
             <li>
-              <input 
+              <input
               bs-switch
               ng-model="file.sync"
               type="checkbox"
-              switch-active="{{ workspace.online }}"
+              switch-active="sidebar.user"
               ng-change="sidebar.setSync(file.id)"
               switch-icon="glyphicon glyphicon-cloud-upload"
               switch-wrapper="center-switch"></input>
@@ -91,7 +91,7 @@
               <button type="button" class="btn btn-danger" ng-click="sidebar.deleteFile(file.id)">
                 <span class="glyphicon glyphicon glyphicon-trash"></span> Delete
               </button>
-            </li>            
+            </li>
           </ul>
     </div>
   </div>
