@@ -124,6 +124,7 @@ angular.module('panels')
 
     $rootScope.$on('signedIn', function (e, user) {
       ctrl.user = user;
+      // $scope.apply();
     });
 
     $rootScope.$on('snapEvent', function (e, d) {

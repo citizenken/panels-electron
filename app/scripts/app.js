@@ -15,16 +15,16 @@ angular
     'ngRoute',
     'ui.codemirror',
     'puElasticInput',
-    'snap',
     'ngLodash',
     'ui.bootstrap',
     'ui.keypress',
     'firebase',
     'frapontillo.bootstrap-switch',
     'ui.select',
-    'ngSanitize'
+    'ngSanitize',
+    'pageslide-directive'
   ])
-  .config(['snapRemoteProvider', '$qProvider', function (snapRemoteProvider, $qProvider) {
+  .config(['$qProvider', function ($qProvider) {
     var config = {
       apiKey: 'AIzaSyBFM-2jOMfbeB0gOw_Xi2WQkhBg8GTqsIQ',
       authDomain: 'panels-fd87e.firebaseapp.com',
@@ -33,7 +33,7 @@ angular
     };
     $qProvider.errorOnUnhandledRejections(false);
     window.firebase.initializeApp(config);
-    snapRemoteProvider.globalOptions.touchToDrag = false;
+    // snapRemoteProvider.globalOptions.touchToDrag = false;
   }])
   .run(['hintService', function (hintService) {
     window.CodeMirror.registerHelper('hint', 'script', function(cm) {

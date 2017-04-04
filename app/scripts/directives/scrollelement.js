@@ -16,7 +16,7 @@ angular.module('panels')
       link: function postLink(scope, element) {
         var origPosition = angular.element(element).position(),
         targetEl = angular.element(element),
-        scrollEl = angular.element('snap-content');
+        scrollEl = angular.element('body');
 
         function resetPosition () {
           targetEl.css('top', '0px');
@@ -32,7 +32,12 @@ angular.module('panels')
               resetPosition();
             }
           } else {
-            targetEl.offset({top: 0});
+
+            if (targetEl.position().top < 0) {
+              resetPosition();
+            } else {
+              targetEl.offset({top: 0});
+            }
           }
         });
 

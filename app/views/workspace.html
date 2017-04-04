@@ -1,25 +1,64 @@
-<snap-drawer snap-drawer="left">
-  <div ng-include="'views/sidebar.html'"></div>
-</snap-drawer>
+<div class="title-header">
+  <div>
+      <input type="text" class="form-control title-input" placeholder="Untitled {{ workspace.workingFile.type }}"
+      pu-elastic-input pu-elastic-input-minwidth="300px" pu-elastic-input-maxwidth="1000px" ng-model="workspace.workingFile.title"
+      ui-keypress="{13:'workspace.doBlur($event)'}">
+  </div>
+</div>
 
-<snap-content snap-event class="hide-snap-overflow">
-  <div class="open-sidebar" scroll-element snap-toggle="left">
+<div class="workspace">
+  <pageslide ps-open="true" ps-side="left" ps-click-outside="false">
+    <div class="open-sidebar">
+      <div ng-include="'views/sidebar.html'"></div>
+    </div>
+  </pageslide>
+
+  <pageslide ps-open="false" ps-side="right">
+    <div class="open-sidebar">
+      <div ng-include="'views/sidebar.html'"></div>
+      <div> <span class="sidebar-icon block glyphicon glyphicon-menu-hamburger"></span></div>
+    </div>
+  </pageslide>
+
+  <div class="page"> <!-- col-md-11 -->
+    <div class="CodeMirror-element" ui-codemirror="{ onLoad : workspace.codemirrorLoaded }" ui-codemirror-opts="workspace.editorOptions" ng-model="workspace.workingFile.content" ui-refresh="true" ng-show="workspace.tab == 'edit'" ></div>
+  </div>
+
+
+
+
+
+<!--   <pageslide ps-open="true" ps-side="left"
+    ps-container="page-wrapper"
+    ps-class="page-slide-left"
+    ps-body-class="page-slide-left-open">
+    <div>
+      <div ng-include="'views/sidebar.html'"></div>
+    </div>
+  </pageslide> -->
+
+  <!-- <snap-content class="hide-snap-overflow"> -->
+ <!--  <div class="open-sidebar" scroll-element snap-toggle="left">
     <div class="open-sidebar-button">
     <span class="sidebar-icon block glyphicon glyphicon-menu-hamburger"></span>
     </div>
-  </div>
-  <div class="title-header page-header no-bottom-margin">
+  </div> -->
+<!--   <div class="title-header page-header no-bottom-margin">
     <div class="form-group">
         <input type="text" class="form-control title-input" placeholder="Untitled {{ workspace.workingFile.type }}"
         pu-elastic-input pu-elastic-input-minwidth="300px" pu-elastic-input-maxwidth="1000px" ng-model="workspace.workingFile.title"
         ui-keypress="{13:'workspace.doBlur($event)'}">
     </div>
-  </div>
-  <div id="page-wrapper" class="row top-padding" ng-click="workspace.focusPage()">
+  </div> -->
+
+
+ <!--  <div id="page-wrapper" class="top-padding" ng-click="workspace.focusPage()">
     <div class="col-md-11 col-md-offset-custom">
       <div class="page col-md-11">
         <div class="CodeMirror-element" ui-codemirror="{ onLoad : workspace.codemirrorLoaded }" ui-codemirror-opts="workspace.editorOptions" ng-model="workspace.workingFile.content" ui-refresh="true" ng-show="workspace.tab == 'edit'" ></div>
       </div>
     </div>
-  </div>
-</snap-content>
+  </div> -->
+</div>
+
+<!-- </snap-content> -->

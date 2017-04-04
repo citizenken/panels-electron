@@ -34,7 +34,7 @@
 }
 
 .col-md-offset-custom {
-  margin-left: 20.5%
+  padding-left: 20.5%
 }
 
 .col-md-custom {
@@ -83,21 +83,20 @@ snap-content {
   background-color: #eee;
 }
 
-.snap-drawers {
-  background-color: darkgray;
+.page-slide-left {
+  margin-left: 15px;
 }
 
-snap-drawer {
+pageslide {
+  border-left: medium solid darkgray;
   border-right: medium solid darkgray;
   background-color: #eee;
-  overflow: hidden !important;
+  width: 268px !important;
+  top: 55px !important;
 }
 
 .open-sidebar {
-  position: absolute;
-  z-index: 50;
-  height: 100%;
-  /*background-color: lightblue;*/
+  padding-top: 20px;
 }
 
 .open-sidebar div, .sidebar-icon {
@@ -119,6 +118,14 @@ snap-drawer {
 .title-header {
   padding-left: 15px;
   padding-right: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: medium solid darkgray;
+  position: fixed;
+  background-color: #eee;
+  width: 100%;
+  z-index: 2000;
+  top: 0px;
 }
 
 .saved {
@@ -223,4 +230,8 @@ a {
 
 .ui-select-container {
   width: inherit !important;
+}
+
+.workspace {
+  margin-top: 2cm;
 }
