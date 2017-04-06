@@ -7,7 +7,7 @@
   background-color: inherit;
   border-style: none;
   border-radius: 0;
-  border-bottom: medium solid #ff0000;
+  border-bottom: 2px solid #ff0000;
   font-size: 26px;
   font-weight: bold;
 }
@@ -88,10 +88,10 @@ snap-content {
 }
 
 pageslide {
-  border-left: medium solid darkgray;
-  border-right: medium solid darkgray;
+  /*border-left: 2px solid darkgray;*/
+  border-right: 2px solid darkgray;
   background-color: #eee;
-  width: 268px !important;
+  /*width: 268px !important;*/
   top: 55px !important;
 }
 
@@ -99,19 +99,32 @@ pageslide {
   padding-top: 20px;
 }
 
-.open-sidebar div, .sidebar-icon {
+/*.open-sidebar div, .sidebar-icon {
   position: relative;
   z-index: 50;
-}
+}*/
 
 .sidebar-icon {
-  top: 42px;
+  top: 6px;
+  left: 5px;
+}
+
+/*.closed-sidebar-button {
+  left: 300px;
 }
 
 .open-sidebar-button {
-  height: 100px;
+  left: 268px;
+}*/
+
+.sidebar-button {
+  left: 268px;
+  transition-duration: 0.5s;
+  transition-property: left;
+  height: 26px;
+  width: 30px;
+  position: relative;
   background-color: darkgray;
-  top: 38%;
   border-radius: 0px 25px 25px 0px;
 }
 
@@ -120,9 +133,9 @@ pageslide {
   padding-right: 15px;
   padding-top: 10px;
   padding-bottom: 10px;
-  border-bottom: medium solid darkgray;
   position: fixed;
   background-color: #eee;
+  border-bottom: 2px solid darkgray;
   width: 100%;
   z-index: 2000;
   top: 0px;
@@ -200,24 +213,6 @@ a {
   display: block;
 }
 
-/*.fade-out {
-  opacity: 1;
-  -webkit-animation: fadeOut 2s forwards;
-  animation: fadeOut 2s;
-  -webkit-animation-delay: 2s forwards;
-  animation-delay: 2s;
-}
-
-@-webkit-keyframes fadeOut {
-    from {opacity: 1;}
-    to {opacity: 0;}
-}
-
-@keyframes fadeOut {
-    from {opacity: 1;}
-    to {opacity: 0;}
-}*/
-
 .create-text {
   display: inline-block;
 }
@@ -234,4 +229,15 @@ a {
 
 .workspace {
   margin-top: 2cm;
+}
+
+.border-bottom {
+  border-bottom: 2px solid darkgray;
+  position: absolute;
+  bottom: 0;
+  width: 100%
+}
+
+.zoom {
+  transform: scale(1);
 }

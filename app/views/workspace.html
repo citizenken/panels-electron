@@ -7,18 +7,24 @@
 </div>
 
 <div class="workspace">
-  <pageslide ps-open="true" ps-side="left" ps-click-outside="false">
+  <pageslide ps-open="workspace.pageslideOpen"
+  ps-side="left"
+  ps-click-outside="false"
+  ps-size="268px">
     <div class="open-sidebar">
+      <div class="sidebar-button" ng-click="workspace.togglePageslide()">
+        <span class="sidebar-icon block glyphicon glyphicon-menu-hamburger"></span>
+      </div>    
       <div ng-include="'views/sidebar.html'"></div>
     </div>
   </pageslide>
 
-  <pageslide ps-open="false" ps-side="right">
+<!--   <pageslide ps-open="false" ps-side="right">
     <div class="open-sidebar">
       <div ng-include="'views/sidebar.html'"></div>
       <div> <span class="sidebar-icon block glyphicon glyphicon-menu-hamburger"></span></div>
     </div>
-  </pageslide>
+  </pageslide> -->
 
   <div class="page"> <!-- col-md-11 -->
     <div class="CodeMirror-element" ui-codemirror="{ onLoad : workspace.codemirrorLoaded }" ui-codemirror-opts="workspace.editorOptions" ng-model="workspace.workingFile.content" ui-refresh="true" ng-show="workspace.tab == 'edit'" ></div>

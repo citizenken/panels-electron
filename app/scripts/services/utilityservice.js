@@ -27,6 +27,14 @@ angular.module('panels')
         return keys;
       },
 
+      getLocalStorageKey: function (key) {
+        return localStorage.getItem(key) || null;
+      },      
+
+      setLocalStorageKey: function (key, value) {
+        return localStorage.setItem(key, value);
+      },            
+
       getRandomColor: function () {
           var letters = '0123456789ABCDEF';
           var color = '#';

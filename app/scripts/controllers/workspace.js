@@ -9,9 +9,9 @@
  */
 angular.module('panels')
   .controller('WorkspaceCtrl', ['$scope', '$rootScope', '$timeout', 'fileService', 'scriptService',
-    'firebaseService', 'watcherService', 'lodash', 'onlineService', 'codemirrorService',
+    'firebaseService', 'watcherService', 'lodash', 'onlineService', 'codemirrorService', 'utilityService',
     function ($scope, $rootScope, $timeout, fileService, scriptService,
-      firebaseService, watcherService, lodash, onlineService, codemirrorService) {
+      firebaseService, watcherService, lodash, onlineService, codemirrorService, utilityService) {
     var ctrl = this;
     ctrl.editorOptions = {
         lineWrapping : true,
@@ -43,9 +43,13 @@ angular.module('panels')
     ctrl.loadFiles = loadFiles;
     ctrl.doBlur = doBlur;
     ctrl.snapState = 'closed';
+    ctrl.pageslideOpen = null;
+    ctrl.togglePageslide = togglePageslide;
+    ctrl.showPageslide = showPageslide;
 
 
     function init () {
+      ctrl.showPageslide();
       ctrl.online = onlineService.online;
       fileService.loadFiles();
       if (ctrl.online && firebaseService.hasFirebaseAuthStored()) {
@@ -101,6 +105,15 @@ angular.module('panels')
       if (codemirrorService.editor) {
         codemirrorService.editor.focus();
       }
+    }
+
+    function showPageslide () {
+      ctrl.pageslideOpen = (utilityService.getLocalStorageKey('pageslideOpen') == "true") || false;
+    }
+
+    function togglePageslide () {
+      ctrl.pageslideOpen = !ctrl.pageslideOpen;
+      utilityService.setLocalStorageKey('pageslideOpen', ctrl.pageslideOpen);
     }
 
     function changeTab (tab) {
