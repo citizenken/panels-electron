@@ -11,10 +11,11 @@
   ps-side="left"
   ps-click-outside="false"
   ps-size="268px">
+    <div class="sidebar-button" ng-click="workspace.togglePageslide()">
+      <span class="sidebar-icon block glyphicon glyphicon-menu-hamburger"></span>
+    </div>
     <div class="open-sidebar">
-      <div class="sidebar-button" ng-click="workspace.togglePageslide()">
-        <span class="sidebar-icon block glyphicon glyphicon-menu-hamburger"></span>
-      </div>    
+
       <div ng-include="'views/sidebar.html'"></div>
     </div>
   </pageslide>

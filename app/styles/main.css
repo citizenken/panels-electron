@@ -12,6 +12,7 @@ html, body {
 
 body {
   padding: 0;
+  overflow: hidden;
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */

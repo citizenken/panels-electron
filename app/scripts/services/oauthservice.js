@@ -11,7 +11,7 @@ angular.module('panels')
   .factory('oauthService', ['$httpParamSerializerJQLike', '$q', '$http',
     function ($httpParamSerializerJQLike, $q, $http) {
     var BrowserWindow = require('electron').remote.BrowserWindow,
-    authRoot = 'https://panels-auth.yarnapp.xyz/',
+    authRoot = 'https://panels-auth.kenpetti.us/',
     redirectUri = authRoot + 'callback', // jscs:disable
     authEndPoint = authRoot,
     logOutEndpoint = authRoot + 'logout';

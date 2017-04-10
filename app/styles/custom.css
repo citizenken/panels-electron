@@ -93,6 +93,9 @@ pageslide {
   background-color: #eee;
   /*width: 268px !important;*/
   top: 55px !important;
+  /*overflow-y: scroll;*/
+  /*overflow-x: hidden;*/
+  /*height: auto !important;*/
 }
 
 .open-sidebar {
@@ -228,7 +231,9 @@ a {
 }
 
 .workspace {
+  height: 100vh;
   margin-top: 2cm;
+  overflow-y: auto;
 }
 
 .border-bottom {
