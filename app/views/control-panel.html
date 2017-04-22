@@ -1,0 +1,77 @@
+<div class="row">
+  <ul class="list-inline">
+    <li>
+      <div class="container">
+        <div class="btn-group" uib-dropdown>
+          <button id="split-button" type="button" class="btn btn-default" ng-disabled="!sidebar.newScriptType" ng-click="sidebar.createFile()">
+            <span class="glyphicon glyphicon-plus"></span> Create {{ sidebar.newScriptType }} script</span>
+          </button>
+          <button type="button" class="btn btn-primary" uib-dropdown-toggle>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
+            <li role="menuitem" ng-repeat="scriptType in sidebar.scriptTypes">
+              <a ng-click="sidebar.newScriptType = scriptType">{{ scriptType }}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+<div class="row">
+  <div class="profile-container">
+    <h4>Your files:</h4>
+    <a ng-click="sidebar.printDocument()">print</a>
+  </div>
+</div>
+<div class="row">
+  <uib-accordion class="file-list" close-others="true">
+    <div uib-accordion-group ng-repeat="file in workspace.files" class="panel-modifications panel-default" is-open="sidebar.openAccordion[file.id]" ng-if="!file.deleted">
+      <uib-accordion-heading>
+        <p>{{ file.title || 'Untitled ' + file.type }}<span class="current-dot" ng-if="file.id == workspace.workingFile.id"></span></p>
+      </uib-accordion-heading>
+      <ul class="list-inline">
+        <li>
+          <button type="button" class="btn btn-default"
+          ng-click="workspace.changeFile(file.id)">
+            <span class="glyphicon glyphicon-edit"></span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="btn btn-default">
+            <span class="glyphicon glyphicon-time"></span>
+          </button>
+        </li>
+        <li>
+          <button ng-disabled="!sidebar.user" type="button" class="btn btn-default" ng-click="sidebar.shareScript(file.id)">
+            <span class="glyphicon glyphicon-share"></span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="btn btn-default" ng-click="sidebar.showDetail(file.id)">
+            <span class="glyphicon glyphicon-info-sign"></span>
+          </button>
+        </li>
+        <li>
+        </li>
+      </ul>
+      <ul class="list-inline">
+        <li>
+          <input
+          bs-switch
+          ng-model="file.sync"
+          type="checkbox"
+          switch-active="sidebar.user"
+          ng-change="sidebar.setSync(file.id)"
+          switch-icon="glyphicon glyphicon-cloud-upload"
+          switch-wrapper="center-switch"></input>
+        </li>
+        <li>
+          <button type="button" class="btn btn-danger" ng-click="sidebar.deleteFile(file.id)">
+            <span class="glyphicon glyphicon glyphicon-trash"></span> Delete
+          </button>
+        </li>
+      </ul>
+  </uib-accordion>
+</div>
