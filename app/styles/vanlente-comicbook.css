@@ -1,10 +1,10 @@
 @media print {
-    .cm-vlc-title-wrapper {
+    .cm-vlc-page-wrapper {
       page-break-before: always !important;
     }
 }
 
-.cm-vlc-title {
+.cm-vlc-page {
   display: inline-block;
   text-decoration: underline;
   font-weight: bold;

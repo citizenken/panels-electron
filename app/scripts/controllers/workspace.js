@@ -29,7 +29,6 @@ angular.module('panels')
     ctrl.user = null;
     ctrl.scriptType = 'comicbook';
     ctrl.init = init;
-    ctrl.focusPage = focusPage;
     ctrl.codemirrorLoaded = codemirrorLoaded;
     ctrl.typeDelayTimer = null;
     ctrl.saved = false;
@@ -52,14 +51,21 @@ angular.module('panels')
       ctrl.showPageslide();
       ctrl.online = onlineService.online;
       fileService.loadFiles();
-      if (ctrl.online && firebaseService.hasFirebaseAuthStored()) {
-        firebaseService.signIn()
-        .then(fileService.loadFromRemote.bind(fileService))
-        .then(firebaseService.loadUsers.bind(firebaseService))
-        .then(ctrl.loadFiles);
+      if (!angular.equals(firebaseService, {})) {
+        firebaseService.rootRefObject.$loaded().then(function () {
+          firebaseService.signIn()
+          .then(fileService.loadFromRemote.bind(fileService))
+          .then(firebaseService.loadUsers.bind(firebaseService))
+          .then(ctrl.loadFiles);
+        })
+        .catch(function () {
+          ctrl.loadFiles();
+        })
       } else {
         ctrl.loadFiles();
       }
+
+
     }
 
     function loadFiles () {
@@ -98,13 +104,6 @@ angular.module('panels')
     function codemirrorLoaded (editor) {
       codemirrorService.editor = editor;
       codemirrorService.registerListeners();
-      ctrl.focusPage();
-    }
-
-    function focusPage () {
-      if (codemirrorService.editor) {
-        codemirrorService.editor.focus();
-      }
     }
 
     function showPageslide () {

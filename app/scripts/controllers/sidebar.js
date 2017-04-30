@@ -9,8 +9,8 @@
  */
 angular.module('panels')
   .controller('SidebarCtrl', [ '$scope', '$rootScope', 'fileService', 'firebaseService',
-    '$uibModal', 'printService', 'oauthService',
-    function ($scope, $rootScope, fileService, firebaseService, $uibModal, printService, oauthService) {
+    '$uibModal', 'printService', 'oauthService', 'codemirrorService',
+    function ($scope, $rootScope, fileService, firebaseService, $uibModal, printService, oauthService, codemirrorService) {
     var ctrl = this;
     ctrl.showHistory = showHistory;
     ctrl.inspectHistory = null;
@@ -34,6 +34,11 @@ angular.module('panels')
     ctrl.deleteFile = deleteFile;
     ctrl.shareScript = shareScript;
     ctrl.printDocument = printDocument;
+    ctrl.scriptElements = codemirrorService.getAllTokens();
+    ctrl.cursorToken = null;
+    ctrl.activeTab = 0;
+    ctrl.insertTemplate = insertTemplate;
+    ctrl.nextElement = null;
     // ctrl.showDetailModel = showDetailModel;
 
     function showHistory (file) {
@@ -122,6 +127,11 @@ angular.module('panels')
       console.log(type);
     }
 
+    function insertTemplate (template) {
+      codemirrorService.insertTextAtCursor(template);
+    }
+
+
     $rootScope.$on('signedIn', function (e, user) {
       ctrl.user = user;
       // $scope.apply();
@@ -137,5 +147,16 @@ angular.module('panels')
 
     $rootScope.$on('usersLoaded', function (e, users) {
       ctrl.users = users;
+    });
+
+    $rootScope.$on('onCMCursorActivity', function (e, cursorToken) {
+      cursorToken = cursorToken.replace('vlc-', '');
+      ctrl.cursorToken = cursorToken;
+      ctrl.nextElement = ctrl.scriptElements[cursorToken].next;
+    });
+
+    $rootScope.$on('onCMFocus', function (e) {
+      ctrl.activeTab = 1;
+      // $scope.$apply();
     });
   }]);

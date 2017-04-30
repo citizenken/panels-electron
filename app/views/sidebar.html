@@ -18,11 +18,13 @@
         </div>
       </div>
     </div>
-    <uib-tabset active="active">
+    <uib-tabset active="sidebar.activeTab">
       <uib-tab index="0" heading="Control Panel">
-      <div ng-include="'views/control-panel.html'"></div>
+        <div ng-include="'views/control-panel.html'"></div>
       </uib-tab>
-      <uib-tab index="1" heading="Elements">elements</uib-tab>
+      <uib-tab index="1" heading="Elements">
+        <div ng-include="'views/elements-panel.html'"></div>
+      </uib-tab>
     </uib-tabset>
   </div>
 </div>

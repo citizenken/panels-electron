@@ -52,7 +52,7 @@ angular.module('panels')
 
       makePages: function (page) {
         var self = this,
-        titles = angular.element('.cm-vlc-title-wrapper'),
+        titles = angular.element('.cm-vlc-page-wrapper'),
         pages = [];
 
         for (var i = 0; i < titles.length; i++) {
@@ -62,7 +62,7 @@ angular.module('panels')
         angular.forEach(pages, function (p, index) {
           var lines = Array.prototype.slice.call(p.getElementsByClassName('CodeMirror-line')),
           codeEl = p.getElementsByClassName('CodeMirror-code')[0],
-          titles = p.getElementsByClassName('cm-vlc-title-wrapper'),
+          titles = p.getElementsByClassName('cm-vlc-page-wrapper'),
           startTitle = titles[index],
           startIndex = Array.prototype.indexOf.call(lines, startTitle),
           finishTitle = null,

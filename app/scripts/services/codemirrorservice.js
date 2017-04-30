@@ -19,6 +19,7 @@ angular.module('panels')
       skipCursorUpdate: false,
       longestCharacerTag: null,
       logCharTagChange: null,
+      currentCursorToken: null,
 
       focusEndOfText: function () {
         var self = this,
@@ -38,17 +39,20 @@ angular.module('panels')
         self.editor.on('change', self.handleChange.bind(self));
         self.editor.on('renderLine', self.handleRenderLine.bind(self));
         self.editor.on('update', self.handleUpdate.bind(self));
+        self.editor.on('cursorActivity', self.handleCursorActivity.bind(self));
       },
 
       handleBlur: function () {
         var self = this;
+
+        $rootScope.$emit('onCMBlur');
         self.skipCursorUpdate = true;
       },
 
       handleFocus: function () {
         var self = this;
 
-        $rootScope.$emit('onFocus');
+        $rootScope.$emit('onCMFocus');
         self.skipCursorUpdate = false;
         if (!angular.equals({}, firebaseService) &&
           firebaseService.userRef &&
@@ -63,6 +67,7 @@ angular.module('panels')
         var self = this,
         content = self.editor.getValue();
 
+        $rootScope.$emit('onCMChange');
         // When the doc changes, if there are cursors but no marks on the doc, set the marks
         if (self.editor.getAllMarks().length !== lodash.toArray(self.cursors).length ||
           self.editor.getAllMarks().length === 0) {
@@ -127,17 +132,11 @@ angular.module('panels')
             });
           }
         });
+      },
 
-
-
-
-
-
-        // angular.forEach(characters, function (character) {
-        //   console.log(character.length);
-        // });
-
-
+      handleCursorActivity: function (instance) {
+        var self = this;
+        $rootScope.$emit('onCMCursorActivity', self.getCurrentCursorToken());
       },
 
       updateCollabCursorLocation: function (markPos, userId) {
@@ -239,6 +238,31 @@ angular.module('panels')
               .css('left', left);
               cursorContainer.append(cursorImage);
         }
+      },
+
+      getAllTokens: function () {
+        return this.editor.getMode().allTokens();
+      },
+
+      getCurrentCursorToken: function () {
+        var self = this,
+        position = self.editor.getCursor(),
+        token = self.editor.getTokenTypeAt(position);
+
+        if (!token) {
+          token = self.editor.getMode().defaultElement.token;
+        }
+
+        if (token !== self.currentCursorToken) {
+          self.currentCursorToken = token
+        }
+
+        return self.currentCursorToken;
+      },
+
+      insertTextAtCursor: function (text) {
+        var self = this;
+        self.editor.replaceSelection(text);
       }
     };
 

@@ -15,8 +15,10 @@ angular.module('panels')
     var rootRef = $window.firebase.database();
     var firebaseService = {};
 
-    if (onlineService.online) {
+    function initilizeFirebaseService () {
       firebaseService = {
+        rootFirebase: $window.firebase,
+        rootRefObject: $firebaseObject(rootRef.ref()),
         firebaseObjects: [], // Storage for destruction on logout
         auth: $firebaseAuth(),
         users: rootRef.ref('users'),
@@ -40,32 +42,46 @@ angular.module('panels')
         },
 
         signIn: function (provider) {
-          var self = this;
+          var self = this,
+          authedUser = self.auth.$getAuth();
           if (!provider) {
             provider = 'google';
           }
 
-          return oauthService.googleOauth(self.hasFirebaseAuthStored())
-          .then(function (token) {
-            var credential = window.firebase.auth.GoogleAuthProvider.credential(token);
-            return self.auth.$signInWithCredential(credential);
-          })
-          .then(function (firebaseUser) {
-            self.firebaseUser = firebaseUser;
-            return firebaseUser;
-          })
-          .then(this.getUserRecord.bind(this))
-          .then(function (userRef) {
-            $rootScope.$emit('signedIn', userRef);
-            return userRef.$loaded();
-          })
-          .then(this.loadUserFiles.bind(this))
-          .then(function () {
-            return $q.resolve(self.userRef);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+
+          if (authedUser) {
+            return this.getUserRecord(authedUser)
+            .then(function (userRef) {
+              $rootScope.$emit('signedIn', userRef);
+              return userRef.$loaded();
+            })
+            .then(this.loadUserFiles.bind(this))
+            .then(function () {
+              return $q.resolve(self.userRef);
+            })
+          } else {
+            return oauthService.googleOauth(self.hasFirebaseAuthStored())
+            .then(function (token) {
+              var credential = window.firebase.auth.GoogleAuthProvider.credential(token);
+              return self.auth.$signInWithCredential(credential);
+            })
+            .then(function (firebaseUser) {
+              self.firebaseUser = firebaseUser;
+              return firebaseUser;
+            })
+            .then(this.getUserRecord.bind(this))
+            .then(function (userRef) {
+              $rootScope.$emit('signedIn', userRef);
+              return userRef.$loaded();
+            })
+            .then(this.loadUserFiles.bind(this))
+            .then(function () {
+              return $q.resolve(self.userRef);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+          }
         },
 
         getUserRecord: function (firebaseUser) {
@@ -204,8 +220,7 @@ angular.module('panels')
             self.userObjects[userId].collaborator[add.file] = add.access;
           }
           self.userObjects[userId].$save();
-        }
-      };
+        }};
 
       firebaseService.auth.$onAuthStateChanged(function(firebaseUser) {
         if (!firebaseUser && firebaseService.firebaseObjects) {
@@ -214,8 +229,20 @@ angular.module('panels')
           });
         }
       });
-
     }
+
+
+    if (onlineService.online) {
+      initilizeFirebaseService();
+    }
+
+    $rootScope.$on('onlineStatusChange', function (e, online) {
+      if (online) {
+        initilizeFirebaseService();
+        // TODO: make sure already initilized services/controllers get the updated
+        // FBS afer reconnting to internet
+      }
+    });
 
     return firebaseService;
   }]);
