@@ -98,12 +98,20 @@ pageslide {
   /*width: 268px !important;*/
   top: 55px !important;
   overflow-y: scroll;
-  /*overflow-x: hidden;*/
+  overflow-x: hidden;
   height: auto !important;
 }
 
+.toggle-sidebar:focus {
+  outline: none !important;
+}
+
+.toggle-sidebar {
+  margin-right: 10px;
+}
+
 .open-sidebar {
-  padding-top: 20px;
+  padding-top: 5px;
 }
 
 /*.open-sidebar div, .sidebar-icon {
@@ -144,7 +152,7 @@ pageslide {
   background-color: #eee;
   border-bottom: 2px solid darkgray;
   width: 100%;
-  z-index: 2000;
+  z-index: 1000;
   top: 0px;
 }
 
@@ -171,8 +179,12 @@ pageslide {
   border-radius: 0px !important;
 }
 
-.profile-container {
+.simple-container {
   padding: 5px;
+}
+
+.btn-space {
+  margin: 5px;
 }
 
 .avatar {

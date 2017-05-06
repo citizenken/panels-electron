@@ -1,28 +1,12 @@
 <div class="row">
-  <ul class="list-inline">
-    <li>
-      <div class="container">
-        <div class="btn-group" uib-dropdown>
-          <button id="split-button" type="button" class="btn btn-default" ng-disabled="!sidebar.newScriptType" ng-click="sidebar.createFile()">
-            <span class="glyphicon glyphicon-plus"></span> Create {{ sidebar.newScriptType }} script</span>
-          </button>
-          <button type="button" class="btn btn-primary" uib-dropdown-toggle>
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
-            <li role="menuitem" ng-repeat="scriptType in sidebar.scriptTypes">
-              <a ng-click="sidebar.newScriptType = scriptType">{{ scriptType }}</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </li>
-  </ul>
+  <div class="simple-container">
+    <button class="btn btn-primary btn-space pull-left" ng-click="sidebar.createFile()">New script</button>
+    <button class="btn btn-primary btn-space pull-right" ng-click="sidebar.printDocument()">Print Current</button>
+  </div>
 </div>
 <div class="row">
-  <div class="profile-container">
+  <div class="simple-container">
     <h4>Your files:</h4>
-    <a ng-click="sidebar.printDocument()">print</a>
   </div>
   <uib-accordion class="file-list" close-others="true">
     <div uib-accordion-group ng-repeat="file in workspace.files" class="panel-modifications panel-default" is-open="sidebar.openAccordion[file.id]" ng-if="!file.deleted">
@@ -60,13 +44,12 @@
           bs-switch
           ng-model="file.sync"
           type="checkbox"
-          switch-active="sidebar.user"
           ng-change="sidebar.setSync(file.id)"
           switch-icon="glyphicon glyphicon-cloud-upload"
           switch-wrapper="center-switch"></input>
         </li>
         <li>
-          <button type="button" class="btn btn-danger" ng-click="sidebar.deleteFile(file.id)">
+          <button type="button" class="btn btn-danger pull-right" ng-click="sidebar.deleteFile(file.id)">
             <span class="glyphicon glyphicon glyphicon-trash"></span> Delete
           </button>
         </li>
